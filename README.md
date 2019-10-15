@@ -1,2 +1,2 @@
-Dis-Trie-Buted
+# Dis-Trie-Buted
 Volunteer Computing Marketplace 
