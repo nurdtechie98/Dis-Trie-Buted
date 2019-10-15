@@ -40,9 +40,9 @@ socket.on('initialze', (loc)=>{
 })
 
 // At this point this data is going to be range
-socket.on('range', (data)=>{
-    var curr = data[0]
-    var limit = data[1]
+socket.on('range', (param)=>{
+    var curr = param[0]
+    var limit = param[1]
 
     initData[0] = curr
     initData[1] = limit
@@ -58,14 +58,14 @@ socket.on('range', (data)=>{
         console.log(`Currently calculating - ${curr}`)
 
         for(let i=0; i<cores; i++){
-            workers[i].postMessage(curr)
+            workers[i].postMessage([curr,limit])
             curr += 1
             curr = Math.min(curr,limit)
         }
 
         if(curr === limit){
             for(let i=0; i<cores; i++){
-                workers[i].postMessage(curr)
+                workers[i].postMessage([curr,limit])
             }
         }
     }

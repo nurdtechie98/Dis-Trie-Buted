@@ -1,4 +1,4 @@
-const checkPrime = (n) => {
+const checkPrime = (n, limit) => {
     // Since the data is not actually serialised no need to transform explicitly
     var flag = true
     for(let i = 2; i < n; i++){
@@ -11,13 +11,12 @@ const checkPrime = (n) => {
     }
 
     // returning currNo, prime/non, terminate?
-    if(n==100){
+    if(n==limit){
         return [n,flag,true]
     }
     else{
         return [n,flag,false]
     }
-
 }
 
-onmessage = (e) => postMessage(checkPrime(e.data))
+onmessage = (e) => postMessage(checkPrime(e.data[0], e.data[1]))

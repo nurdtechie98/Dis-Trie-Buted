@@ -13,13 +13,16 @@ server = app.listen(8080,()=>{
 })
 
 const io = require('socket.io')(server);
+const range = 100
+var curr = 1
 
 io.on('connection',(socket)=>{
     workers++;
     console.log('new user joined',workers);
     socket.emit('initialze',url);
     socket.on('ready', () => {
-        socket.emit('range',[1,100])
+        socket.emit('range',[curr, curr + range - 1])
+        curr += range
     });
     socket.on('processingDone', (result) => {
         for(let i=0; i<result[0].length; i++){
