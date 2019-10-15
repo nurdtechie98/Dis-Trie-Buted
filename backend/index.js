@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
 
-const url = "https://gist.github.com/nurdtechie98/628fde640093d30d3ae3b62e3b711488.js";
+// For now sending local files, will switch to some hosted entity
+// Or can even pass js file as a blob or string and create web worker
+const url = "../worker.js";
 
 let workers = 0;
 app.use(express.static('public'));
@@ -16,6 +18,15 @@ io.on('connection',(socket)=>{
     workers++;
     console.log('new user joined',workers);
     socket.emit('initialze',url);
-    //socket.on('ready');
+    socket.on('ready', () => {
+        socket.emit('range',[1,100])
+    });
+    socket.on('processingDone', (result) => {
+        for(let i=0; i<result[0].length; i++){
+            if(result[0][i]){
+                console.log(`${i+result[1][0]} is prime`)
+            }
+        }
+    })
 });
 
