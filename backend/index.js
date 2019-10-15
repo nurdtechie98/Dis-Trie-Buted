@@ -13,8 +13,8 @@ server = app.listen(8080,()=>{
 })
 
 const io = require('socket.io')(server);
-const range = 100
-var curr = 1
+const range = 20000
+var curr = 10000000
 
 io.on('connection',(socket)=>{
     workers++;

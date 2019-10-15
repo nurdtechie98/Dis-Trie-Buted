@@ -1,5 +1,15 @@
 const socket = io.connect('http://localhost:8080')
 const cores = navigator.hardwareConcurrency
+const body = document.getElementsByTagName("body")[0]
+
+var resultDisplay = []
+
+for(let i=0; i<cores; i++){
+    let res = document.createElement("div")
+    res.classList.add(`result${i}`)
+    resultDisplay.push(res)
+    body.appendChild(res)
+}
 
 var data = []
 var workers = []
@@ -24,7 +34,7 @@ socket.on('initialze', (loc)=>{
         myWorker.onmessage = (response) => {
             // response => index | result | terminate ?
             data[response.data[0] - initData[0]] = response.data[1]
-
+            resultDisplay[i].textContent = `Calculated- ${response.data[0]} as ${response.data[1]} at ${i}-Thread`
             if(response.data[2]){
                 console.log("Response - ", response.data)
                 terminate(i)
@@ -55,10 +65,9 @@ socket.on('range', (param)=>{
     console.log(`Recieved range is ${curr} to ${limit}`)
     
     while(curr < limit){
-        console.log(`Currently calculating - ${curr}`)
-
         for(let i=0; i<cores; i++){
             workers[i].postMessage([curr,limit])
+            resultDisplay[i].textContent = `Checking prime for - ${curr}`
             curr += 1
             curr = Math.min(curr,limit)
         }
