@@ -3,10 +3,10 @@ const app = express();
 
 // For now sending local files, will switch to some hosted entity
 // Or can even pass js file as a blob or string and create web worker
-const url = "../worker.js";
+const url = "worker.js";
 
 let workers = 0;
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public/'));
 console.log(process.env);
 server = app.listen(process.env.PORT,()=>{
     console.log(`listening at port ${process.env.PORT}`); 
