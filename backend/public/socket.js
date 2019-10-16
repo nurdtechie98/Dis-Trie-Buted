@@ -1,4 +1,4 @@
-const socket = io.connect('http://localhost:8080')
+const socket = io.connect('https://dis-trie-buted.herokuapp.com:8080')
 const cores = navigator.hardwareConcurrency
 const body = document.getElementsByTagName("body")[0]
 
