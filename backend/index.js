@@ -7,9 +7,9 @@ const url = "../worker.js";
 
 let workers = 0;
 app.use(express.static('public'));
-
-server = app.listen(process.env.IP,()=>{
-    console.log(`listening at port ${process.env.IP}`); 
+console.log(process.env);
+server = app.listen(process.env.PORT,()=>{
+    console.log(`listening at port ${process.env.PORT}`); 
 })
 
 const io = require('socket.io')(server);
