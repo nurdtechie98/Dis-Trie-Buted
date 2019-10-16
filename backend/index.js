@@ -8,8 +8,8 @@ const url = "../worker.js";
 let workers = 0;
 app.use(express.static('public'));
 
-server = app.listen(8080,()=>{
-    console.log("listening at port 8080"); 
+server = app.listen(process.env.IP,()=>{
+    console.log(`listening at port ${process.env.IP}`); 
 })
 
 const io = require('socket.io')(server);
