@@ -3,12 +3,33 @@ const cores = navigator.hardwareConcurrency
 const body = document.getElementsByTagName("body")[0]
 
 var resultDisplay = []
+const resContainer = document.getElementsByClassName("result")[0];
+const fin = document.getElementsByClassName("final")[0];
+const count = document.getElementsByClassName("count")[0];
+
+var tot = 0;
 
 for(let i=0; i<cores; i++){
-    let res = document.createElement("div")
-    res.classList.add(`result${i}`)
-    resultDisplay.push(res)
-    body.appendChild(res)
+    let resRow = document.createElement("div")
+    resRow.classList.add(`result__row`)
+    resRow.id = `result__row--${i}`
+    let resRowThread = document.createElement("div");
+    let resRowData = document.createElement("div");
+    let resRowStatus = document.createElement("div");
+
+    resRowThread.classList.add(`result__thread`)
+    resRowData.classList.add(`result__data`)
+    resRowStatus.classList.add(`result__status`)
+
+    resRowThread.textContent = `${i+1}`
+
+    resRow.appendChild(resRowThread)
+    resRow.appendChild(resRowData)
+    resRow.appendChild(resRowStatus)
+
+    resContainer.appendChild(resRow)
+
+    resultDisplay.push([resRowData, resRowStatus])
 }
 
 var data = []
@@ -34,7 +55,16 @@ socket.on('initialze', (loc)=>{
         myWorker.onmessage = (response) => {
             // response => index | result | terminate ?
             data[response.data[0] - initData[0]] = response.data[1]
-            resultDisplay[i].textContent = `Calculated- ${response.data[0]} as ${response.data[1]} at ${i}-Thread`
+            resultDisplay[i][0].textContent = response.data[0];
+            resultDisplay[i][1].textContent = response.data[1];
+            if(response.data[1]){
+                tot += 1;
+                const primeDiv = document.createElement("div")
+                primeDiv.classList.add('final__data')
+                primeDiv.textContent = response.data[0]
+                fin.appendChild(primeDiv)
+                count.textContent = `Results - ${tot} primes`
+            }
             if(response.data[2]){
                 console.log("Response - ", response.data)
                 terminate(i)
@@ -67,7 +97,8 @@ socket.on('range', (param)=>{
     while(curr < limit){
         for(let i=0; i<cores; i++){
             workers[i].postMessage([curr,limit])
-            resultDisplay[i].textContent = `Checking prime for - ${curr}`
+            resultDisplay[i][0].textContent = curr
+            resultDisplay[i][1].textContent = "None"
             curr += 1
             curr = Math.min(curr,limit)
         }

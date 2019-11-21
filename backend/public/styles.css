@@ -1,0 +1,26 @@
+.result{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.result__row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    max-height: 50vh;
+    margin: 5px 0;
+}
+
+.final {
+    display: flex;
+    flex-direction: row;
+    max-width: 100vw;
+    max-height: 50vh;
+    overflow-x: hidden;
+    flex-wrap: wrap;
+}
+
+.final__data{
+    padding: 2px;
+}
