@@ -7,7 +7,7 @@ const url = "worker.js";
 
 let workers = 0;
 app.use(express.static(__dirname + '/public/'));
-// process.env.PORT = process.env.PORT ? process.env.PORT : 8080;
+process.env.PORT = process.env.PORT ? process.env.PORT : 8080;
 console.log(process.env.PORT);
 server = app.listen(process.env.PORT,()=>{
     console.log(`listening at port ${process.env.PORT}`); 
