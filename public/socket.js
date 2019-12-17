@@ -1,5 +1,7 @@
 // const socket = io.connect(`https://dis-trie-buted.herokuapp.com`)
-const socket = io.connect(`localhost:${process.env.PORT ? process.env.PORT : 8080}`)
+
+// extract to worker.ejs as this will be different for every file 
+// const socket = io.connect(`localhost:8080`)
 const cores = navigator.hardwareConcurrency
 const body = document.getElementsByTagName("body")[0]
 

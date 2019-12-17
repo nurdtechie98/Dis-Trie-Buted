@@ -1,0 +1,14 @@
+{
+    "id": "PRMS",
+    "name": "Bulk Prime Calculations",
+    "description": "Calculating prime numbers in bulk using brute force approach, by distributing the number to be checked",
+    "supplier": "supplierWalletAddress",
+    "workerURL": "worker.js",
+    "reward": 2000,
+    "start": 10000000,
+    "end": 10000000000,
+    "step": 20000,
+    "maxTime": 5,
+    "readFile": null,
+    "writeFile": null
+}
