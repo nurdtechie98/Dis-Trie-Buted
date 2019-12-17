@@ -11,6 +11,7 @@ const checkPrime = (n, limit) => {
     }
 
     // returning currNo, prime/non, terminate?
+    // postmessage to socket.js
     if(n==limit){
         return [n,flag,true]
     }
@@ -19,4 +20,5 @@ const checkPrime = (n, limit) => {
     }
 }
 
+// receive parameters for the algorithm, from socket.js
 onmessage = (e) => postMessage(checkPrime(e.data[0], e.data[1]))
