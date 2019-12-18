@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 app.use(express.static(__dirname + '/public/'));
+app.use('/static', express.static(path.join(__dirname, '/public/')))
 app.set('views', path.join(__dirname, '/views/'));
 app.set('view engine', 'ejs');
 app.use(express.json());
@@ -22,7 +23,7 @@ const getProblemsList = () => {
         return problemsList;
 }
 
-const createNamespace = (namespace, start, end, step, url) => {
+const createNamespace = (namespace, start, end, step, url, readFile) => {
 
     const nsp = io.of(`/${namespace}`);
 
@@ -36,7 +37,7 @@ const createNamespace = (namespace, start, end, step, url) => {
         socket.emit('initialize',url);
         socket.on('ready', () => {
             console.log(`Ready received -> ${socket.id} is calculating from ${curr}`);
-            socket.emit('range',curr,step);
+            socket.emit('range',curr,step,readFile);
             curr += step;
         });
         socket.on('disconnect', () => console.log(`${socket.id} disconnected`));
@@ -79,7 +80,7 @@ app.get("/:namespace", (req,res) => {
         const configJsonPath = path.join(__dirname, `/public/${namespace}/config.json`);
         const configJson = JSON.parse(fs.readFileSync(configJsonPath, 'utf-8'));
         
-        createNamespace(namespace, configJson.start, configJson.end, configJson.step, `/${namespace}/${configJson.workerURL}`);
+        createNamespace(namespace, configJson.start, configJson.end, configJson.step, `/${namespace}/${configJson.workerURL}`, configJson.readFile);
         // create namespace for the current one
         
         console.log(configJson);
