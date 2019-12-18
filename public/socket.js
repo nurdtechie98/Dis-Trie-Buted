@@ -1,45 +1,4 @@
-// const socket = io.connect(`https://dis-trie-buted.herokuapp.com`)
-
-// extract to worker.ejs as this will be different for every file 
-// const socket = io.connect(`localhost:8080`)
-
-const cores = navigator.hardwareConcurrency
-const body = document.getElementsByTagName("body")[0]
-
-// for displaying status of each thread ->
-var resultDisplay = []
-
-const resContainer = document.getElementsByClassName("result")[0];
-const fin = document.getElementsByClassName("final")[0];
-const count = document.getElementsByClassName("count")[0];
-
-var tot = 0;
-
-// creating elements that hold result for each thread
-for(let i=0; i<cores; i++){
-    let resRow = document.createElement("div")
-    resRow.classList.add(`result__row`)
-    resRow.id = `result__row--${i}`
-    let resRowThread = document.createElement("div");
-    let resRowData = document.createElement("div");
-    let resRowStatus = document.createElement("div");
-
-    resRowThread.classList.add(`result__thread`)
-    resRowData.classList.add(`result__data`)
-    resRowStatus.classList.add(`result__status`)
-
-    resRowThread.textContent = `${i+1}`
-
-    resRow.appendChild(resRowThread)
-    resRow.appendChild(resRowData)
-    resRow.appendChild(resRowStatus)
-
-    resContainer.appendChild(resRow)
-
-    // storing them in resultDisplay to alter it's contents next
-    resultDisplay.push([resRowData, resRowStatus])
-}
-
+import {cores, resultDisplay, fin} from './domElements'
 
 var data = []
 var workers = []
@@ -55,7 +14,7 @@ const terminate = (id) => {
 
     // checking status of each thread, if it is 0 for all, emit processingDone
     if(stat.reduce((total,cur) => total+cur) === 0){
-        socket.emit('processingDone', [data,initData])
+        socket.emit('processingDone',data)
     }
 }
 
@@ -84,14 +43,11 @@ socket.on('initialze', (loc)=>{
             // this can cause inconsistencies though, since multiple thread might try to access it at the same time
             // create separate total for each thread
             if(response.data[1]){
-                tot += 1;
-
                 // creating and adding div that is prime to final div on frontend
                 const primeDiv = document.createElement("div")
                 primeDiv.classList.add('final__data')
                 primeDiv.textContent = response.data[0]
                 fin.appendChild(primeDiv)
-                count.textContent = `Results - ${tot} primes`
             }
             // if terminate true, then need to terminate that worker
             if(response.data[2]){

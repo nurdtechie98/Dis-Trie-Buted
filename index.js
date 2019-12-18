@@ -28,11 +28,28 @@ const createNamespace = (namespace, start, end, step, url) => {
 
     nsp.on('connection',(socket)=>{
         console.log(`${socket.id} connected to ${namespace}`);
+
+        var curr = start;
+
         // socket represents a single connection
         // nsp represents the whole namespace
-        socket.emit('initialze',url);
-        socket.on('ready', () => console.log(`${socket.id} is ready to receive arguments now`));
+        socket.emit('initialize',url);
+        socket.on('ready', () => {
+            console.log(`Ready received -> ${socket.id} is calculating from ${curr}`);
+            socket.emit('range',curr,step);
+            curr += step;
+        });
         socket.on('disconnect', () => console.log(`${socket.id} disconnected`));
+        socket.on('processingDone', (outputData) => {
+            // outputData is according to index of the node
+            // To translate to input data, we need to store somewhere current index allocated to socket
+            // receiving data in division of cores
+            for(let c=0; c<outputData.length; c++){
+                for(let i=0; i<outputData[c].length; i++){
+                    console.log(outputData[c][i]);
+                }
+            }
+        })
     });
     
 }
@@ -54,6 +71,7 @@ app.get("/", (_req,res) => {
 })
 
 app.get("/favicon.ico", (_req,res) => res.status(204));
+app.get("/robots.txt", (_req,res) => res.status(204));
 
 app.get("/:namespace", (req,res) => {
     const namespace = req.params.namespace;
