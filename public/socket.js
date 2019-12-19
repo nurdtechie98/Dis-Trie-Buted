@@ -1,108 +1,102 @@
-import {cores, resultDisplay, fin} from './domElements'
+// Common script for all kinds of applications
+// Will ALWAYS be served to the slave node
+// Defines the communication between slave and master node
 
-var data = []
-var workers = []
+const cores = navigator.hardwareConcurrency
+
+// To store results returned from each thread
+var outputData = []
+// To store all worker threads, together forms a team
+var team = []
+// To store status of those threads, as they don't provide it implictly
 var stat = []
-var initData = []
 
 // to terminate a web worker
 const terminate = (id) => {
-    workers[id].terminate()
+
+    // Terminating a specific worker by accessing by id
+    team[id].terminate()
+
+    // Setting the status of worker to 0
     stat[id] = 0
 
     console.log("stat - ", stat)
 
     // checking status of each thread, if it is 0 for all, emit processingDone
     if(stat.reduce((total,cur) => total+cur) === 0){
-        socket.emit('processingDone',data)
+        console.log(`All threads have been terminated`)
+        // processingDone message sent to master node, with the data
+        socket.emit('processingDone',outputData)
     }
 }
 
-// using socket here, which is connected to the namespace as done from script tag
-// socket represents a single one <-> one connection
-socket.on('initialze', (loc)=>{
-    console.log(`Worker file located at ${loc}`)
-    
-    // initialize web workers equal to the number of cores
+socket.on('initialize', (url) => {
+
+    // Need to create array of workers, and define their behaviour
     for(let i=0; i<cores; i++){
-        var myWorker = new Worker(loc)
+        var myWorker = new Worker(url);
 
-        // web worker sends this message on execution of their algorithm
-        // check worker.js for further details
-        myWorker.onmessage = (response) => {
+        // Assigning data as per cores, as that is what is received
+        outputData[i] = [];
 
-            // response => index | result | terminate ?
-            // since data is 0 indexed, we need to subtract the offset
-            data[response.data[0] - initData[0]] = response.data[1]
+        // Each worker will be allocated a fixed array of tasks to perform
+        // So each worker, spawns and executes exactly one time
 
-            // setting display for current status of the thread
-            resultDisplay[i][0].textContent = response.data[0];
-            resultDisplay[i][1].textContent = response.data[1];
+        // Can optimize here, by dynamically calling postMessage for each onnessage
+        myWorker.onmessage = (res) => {
+            // res -> outputData array -> [data,result]
+            // Currently outputing data and result
 
-            // if it is true, then number is prime
-            // this can cause inconsistencies though, since multiple thread might try to access it at the same time
-            // create separate total for each thread
-            if(response.data[1]){
-                // creating and adding div that is prime to final div on frontend
-                const primeDiv = document.createElement("div")
-                primeDiv.classList.add('final__data')
-                primeDiv.textContent = response.data[0]
-                fin.appendChild(primeDiv)
-            }
-            // if terminate true, then need to terminate that worker
-            if(response.data[2]){
-                console.log("Response - ", response.data)
-                terminate(i)
-            }
+            // Can optimize further by only giving dataIndex
+            // And generating data on master node
+
+            console.log(`calculation done from ${res.data[0][0]} to ${res.data[res.data.length-1][0]}`);
+            
+            // Since each worker works exactly once
+            // Once they finish their array of tasks, it's complete and can be terminated
+            terminate(i);
+            outputData[i] = res.data;
         }
-        // onmessage over
 
-        // push myWorker to workers array
-        workers.push(myWorker)
-        // set status as 1 for that worker
-        stat.push(1)
+        // Finally pusing worker to the team
+        team.push(myWorker);
+        // Setting the status of worker to 1, as it is in use.
+        stat.push(1);
     }
-    console.log("Workers created as- ", workers)
 
-    // finally created all workers, and setup onmessage handlers for them
-    // ready for next call
-    socket.emit('ready')
+    console.log('Team of myWorkers created as ->', team);
+    // Sending ready message to master node, to receive range next
+    socket.emit('ready');
 })
 
-// At this point this data is going to be range
-socket.on('range', (param)=>{
+socket.on('range', (start, step, fileLoc) => {
 
-    // received current and limit upto which to calculate
-    var curr = param[0]
-    var limit = param[1]
+    // Since data is really queues on the web worker side
+    // We can just send the parameters to construct the input data
+    // This will save communication costs as well
 
-    // set initData for offset calculation
-    initData[0] = curr
-    initData[1] = limit
+    // Alternatively we can find a complex solution
+    // That reponds to every postMessage from workerScript
 
-    // Initialise result array
-    for(let i=0 ; i < limit-curr+1; i++){
-        data.push(0)
+    // Creating starting parameters and step for each array
+    // Ex. start -> 1000 step -> 300 cores -> 8
+    // Need to divide as -> [1000 - 1037],[1038 - 1075],[1076 - 1113],[1114 - 1151]
+    // [1152 - 1189],[1190 - 1227],[1228 - 1265],[1266 - 1300]
+
+    // generating params for each worker thread here
+    // inputData is generated on the thread itself to save communication costs
+    var workerParams = []
+    var workerStep = Math.ceil(step/cores)
+
+    for(let i=0; i<(cores-1); i++){
+        workerParams.push([start + (i*workerStep), workerStep, fileLoc])
     }
 
-    console.log(`Recieved range is ${curr} to ${limit}`)
-    
-    while(curr < limit){
-        for(let i=0; i<cores; i++){
-            // posting message to web worker
-            // it catches it in it's onmessage
-            // sends result back using return
-            workers[i].postMessage([curr,limit])
-            resultDisplay[i][0].textContent = curr
-            resultDisplay[i][1].textContent = "None"
-            curr += 1
-            curr = Math.min(curr,limit)
-        }
+    // Last core will get all the remaining ones
+    workerParams.push([start + (cores-1*workerStep), step - (cores-1*workerStep) + 1, fileLoc])
 
-        if(curr === limit){
-            for(let i=0; i<cores; i++){
-                workers[i].postMessage([curr,limit])
-            }
-        }
+    for(let i=0; i<cores; i++){
+        console.log(`Thread ${i} is alloted ${workerParams[i][0]} to ${workerParams[i][1]}`)
+        team[i].postMessage(workerParams[i])
     }
 })

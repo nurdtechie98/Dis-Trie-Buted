@@ -1,3 +1,4 @@
+// Algorithm to execute on each worker thread
 const summation = (data) => {
 
     var sum = 0;
@@ -27,7 +28,9 @@ onmessage = (e) => {
     var inputData = []
     var outputData = []
     
+    // If file location given, need to read from file
     if(e.data[2]){
+
         // Creating input data from certain file
         async function makeTextFileLineIterator(fileURL) {
             const utf8Decoder = new TextDecoder('utf-8');
@@ -38,6 +41,8 @@ onmessage = (e) => {
             return chunk.split("\n");
         }
         
+        // Since reading file is async need async await, then...
+        // Also note that, reading a csv over here, as mentioned in corresponding config file
         makeTextFileLineIterator(e.data[2]).then((data) => {
             lines = data;
             for(var i=1; i<lines.length; i++){

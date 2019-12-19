@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/styles.css">
     <script src= "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <!-- Very very crucial the below line, to connect to a namespace dynamically -->
     <script>const socket = io("/<%= config.id %>");</script>
 </head>
 <body>
@@ -21,5 +22,5 @@
     <div class="final">        
     </div>
 </body>
-<script src= "/newSocket.js" ></script>
+<script src= "/socket.js" ></script>
 </html>
