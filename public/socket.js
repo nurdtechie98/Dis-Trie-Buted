@@ -32,6 +32,13 @@ const terminate = (id) => {
 
 socket.on('initialize', (url) => {
 
+    // Need to close earlier workers and clear the worker team
+    team.forEach((worker) => worker.terminate());
+
+    // Reset the worker team and their status
+    team = [];
+    stat = [];
+
     // Need to create array of workers, and define their behaviour
     for(let i=0; i<cores; i++){
         var myWorker = new Worker(url);
@@ -93,10 +100,10 @@ socket.on('range', (start, step, fileLoc) => {
     }
 
     // Last core will get all the remaining ones
-    workerParams.push([start + (cores-1*workerStep), step - (cores-1*workerStep) + 1, fileLoc])
+    workerParams.push([start + ((cores-1)*workerStep), step - ((cores-1)*workerStep) + 1, fileLoc])
 
     for(let i=0; i<cores; i++){
-        console.log(`Thread ${i} is alloted ${workerParams[i][0]} to ${workerParams[i][1]}`)
+        console.log(`Thread ${i} is alloted ${workerParams[i][0]} to ${workerParams[i][0] + workerParams[i][1]}`)
         team[i].postMessage(workerParams[i])
     }
 })
