@@ -22,22 +22,46 @@ const io = require('socket.io')(server);
 
 // Getting current problems dynamically, as they are stored in public folder
 const getProblemsList = () => {
-        const problemsListPath = path.join(__dirname, `/public/`);
-        const problemsList = fs.readdirSync(problemsListPath)
-        return problemsList;
+    const problemsListPath = path.join(__dirname, `/public/`);
+    const problemsList = fs.readdirSync(problemsListPath)
+    return problemsList;
 }
+
+const configsList = [];
+const resultList = []
+const problemsList = getProblemsList();
+problemsList.forEach((problem) => {
+    if(fs.lstatSync(path.join(__dirname, `/public/${problem}`)).isDirectory()){
+        const configPath = path.join(__dirname, `/public/${problem}/config.json`);
+        const configJson = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+        configsList.push(configJson);
+        
+        if(!fs.existsSync(path.join(__dirname, `/public/${problem}/results.json`))){
+            const numSegments = Math.ceil((configJson.end - configJson.start)/configJson.step);
+            const answers = new Array();
+            for(let i=0; i<numSegments; i++){
+                answers.push(new Array());
+            }
+            const clients = new Array();
+            const data = JSON.stringify({clients, answers});
+            fs.writeFileSync(path.join(__dirname, `/public/${problem}/results.json`), data);
+
+            resultList.push({clients, answers});
+        }
+    }
+})
 
 // Creating namespace, or socket communication for each problem
 // Can be otpimised by checking if namespace already exists ?
 const createNamespace = (namespace, start, end, step, url, readFile) => {
-
+    
     const nsp = io.of(`/${namespace}`);
-
+    
     nsp.on('connection',(socket)=>{
         console.log(`${socket.id} connected to ${namespace}`);
-
+        
         var curr = start;
-
+        
         // socket represents a single connection
         // nsp represents the whole namespace
         socket.emit('initialize',url);
@@ -53,7 +77,7 @@ const createNamespace = (namespace, start, end, step, url, readFile) => {
             // outputData is according to index of the node
             // To translate to input data, we need to store somewhere current index allocated to socket
             // receiving data in division of cores
-
+            
             console.log(`Processing done by ${socket.id}`);
             for(let c=0; c<outputData.length; c++){
                 for(let i=0; i<outputData[c].length; i++){
@@ -69,18 +93,9 @@ const createNamespace = (namespace, start, end, step, url, readFile) => {
 // All current problems fetched and data extracted from config.json
 // Render the main view with this dynamic data
 app.get("/", (_req,res) => {
-
+    
     // get all files config
-    const configsList = [];
-    const problemsList = getProblemsList();
-    problemsList.forEach((problem) => {
-        if(fs.lstatSync(path.join(__dirname, `/public/${problem}`)).isDirectory()){
-                const configPath = path.join(__dirname, `/public/${problem}/config.json`);
-                const configJson = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-                configsList.push(configJson);
-        }
-    })
-
+    
     res.render("main", {config: configsList});
 })
 
