@@ -30,7 +30,7 @@ const terminate = (id) => {
     }
 }
 
-socket.on('initialize', (url) => {
+socket.once('initialize', (url) => {
 
     // Need to close earlier workers and clear the worker team
     team.forEach((worker) => worker.terminate());
@@ -61,8 +61,8 @@ socket.on('initialize', (url) => {
             
             // Since each worker works exactly once
             // Once they finish their array of tasks, it's complete and can be terminated
-            terminate(i);
             outputData[i] = res.data;
+            terminate(i);
         }
 
         // Finally pusing worker to the team
@@ -76,7 +76,7 @@ socket.on('initialize', (url) => {
     socket.emit('ready');
 })
 
-socket.on('range', (start, step, fileLoc) => {
+socket.once('range', (start, step, fileLoc) => {
 
     // Since data is really queues on the web worker side
     // We can just send the parameters to construct the input data

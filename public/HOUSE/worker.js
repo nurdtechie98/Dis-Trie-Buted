@@ -17,8 +17,8 @@ const summation = (data) => {
     sum += 30 * parseFloat(data[10]);
     sum += 50 * parseFloat(data[11]);
     sum += 10 * parseFloat(data[12]);
-
-    return [data, sum]
+    
+    return sum;
 }
 
 // receive parameters for the algorithm, from socket.js
@@ -45,12 +45,14 @@ onmessage = (e) => {
         // Also note that, reading a csv over here, as mentioned in corresponding config file
         makeTextFileLineIterator(e.data[2]).then((data) => {
             lines = data;
-            for(var i=1; i<lines.length; i++){
+            for(var i=e.data[0]; i<e.data[0]+e.data[1]; i++){
                 var temp = lines[i].split(",");
                 if(temp.length > 1){
                     inputData.push(temp);
                 }
             }
+
+            console.log(inputData.length);
 
             // This is calculated synchronously, since single threaded
             inputData.forEach((data) => outputData.push(summation(data)))
