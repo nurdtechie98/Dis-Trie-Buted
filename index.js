@@ -20,10 +20,12 @@ app.use(express.urlencoded({extended: false}));
 process.env.PORT = process.env.PORT ? process.env.PORT : 8080;
 server = app.listen(process.env.PORT,()=>{
     console.log(`listening at port ${process.env.PORT}`); 
-})
+});
 
 // Setting up socket io
 const io = require('socket.io')(server);
+
+console.log("Initializing needed files....");
 
 // Getting current problems dynamically, as they are stored in public folder
 const getProblemsList = () => {
@@ -66,14 +68,16 @@ problemsList.forEach((problem) => {
             const clients = new Object();
             const data = JSON.stringify({clients, answers});
             fs.writeFileSync(resultPath, data);
+
             resultDict[configJson.id] = {clients, answers};
+            configDict[configJson.id] = configJson;
         }
         else{
             const resultJson = JSON.parse(fs.readFileSync(resultPath, 'utf-8'));
             var flag = true;
             
             for(let i=0; i<resultJson.answers.length; i++){
-                if(resultJson.answers[i].length == 0){
+                if(Array.isArray(resultJson.answers[i]) && resultJson.answers[i].length == 0){
                     flag = false;
                     break;
                 }
@@ -88,14 +92,32 @@ problemsList.forEach((problem) => {
     }
 })
 
+console.log("All files created, can start now...");
+
 // When root location hit, display all current problems available dynamically
 // All current problems fetched and data extracted from config.json
 // Render the main view with this dynamic data
 app.get("/", (_req,res) => {
     
-    // get all files config
+    // calculate number of total steps and completed ones
+    const resTotal = [];
+    const resDone = [];
+
+    Object.keys(resultDict).forEach((prb) => {
+        resTotal.push(resultDict[prb].answers.length);
     
-    res.render("main", {config: Object.values(configDict)});
+        let temp = 0;
+        resultDict[prb].answers.forEach((res) => {
+            if(Array.isArray(res) && res.length > 0){
+                temp += 1;
+            }
+        })
+
+        resDone.push(temp);
+    })
+
+    // get all files config
+    res.render("main", {config: Object.values(configDict), resTotal, resDone});
 })
 
 // Setting up routes for default requests, so that they do not hamper process

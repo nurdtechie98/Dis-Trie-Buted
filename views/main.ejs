@@ -12,6 +12,7 @@
                     <div class="problem__container">
                         <div class="problem__name"><%= config[i].name %></div>
                         <div class="problem__reward"><%= config[i].reward %></div>
+                        <div class="problem__finished"><%= resDone[i] %> / <%= resTotal[i] %></div>
                         <a href=./<%= config[i].id %> ><div class="problem__button">Start</div></a>
                     </div>
                 <% } %>

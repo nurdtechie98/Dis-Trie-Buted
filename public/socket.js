@@ -12,6 +12,32 @@ var team = []
 var stat = []
 // Parameter for workers
 var workerParams = []
+// results
+var resultRows = []
+
+const resultContainer = document.getElementsByClassName("result")[0];
+
+for(let i=0; i<cores; i++){
+    const row = document.createElement("div");
+    const thread = document.createElement("div");
+    const data = document.createElement("div");
+    const status = document.createElement("div");
+
+    row.classList.add("result__row");
+    thread.classList.add("result__thread");
+    data.classList.add("result__data");
+    status.classList.add("result__status");
+
+    row.appendChild(thread);
+    row.appendChild(data);
+    row.appendChild(status);
+
+    resultContainer.appendChild(row);
+
+    thread.innerHTML = `Thread-${i}`;
+
+    resultRows.push([thread,data,status]);
+}
 
 window.addEventListener('beforeunload', function (e) {
     // Cancel the event
@@ -23,6 +49,9 @@ window.addEventListener('beforeunload', function (e) {
 // to terminate a web worker
 const terminate = (id) => {
     
+    // Job Done for the thread
+    resultRows[id][2].innerHTML = `Done`;
+
     // Terminating a specific worker by accessing by id
     team[id].terminate()
     
@@ -113,6 +142,8 @@ socket.on('range', (start, step, fileLoc) => {
     
     for(let i=0; i<cores; i++){
         console.log(`Thread ${i} is alloted ${workerParams[i][0]} to ${workerParams[i][0] + workerParams[i][1]}`)
+        resultRows[i][1].innerHTML = `${workerParams[i][0]} to ${workerParams[i][0] + workerParams[i][1]}`;
+        resultRows[i][2].innerHTML = `Calculating...`;
         team[i].postMessage(workerParams[i])
     }
 })
