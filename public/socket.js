@@ -10,6 +10,8 @@ var outputData = []
 var team = []
 // To store status of those threads, as they don't provide it implictly
 var stat = []
+// Parameter for workers
+var workerParams = []
 
 // to terminate a web worker
 const terminate = (id) => {
@@ -26,11 +28,13 @@ const terminate = (id) => {
     if(stat.reduce((total,cur) => total+cur) === 0){
         console.log(`All threads have been terminated`)
         // processingDone message sent to master node, with the data
-        socket.emit('processingDone',outputData)
+        // Sending all flattened data to master node, to release off some workload
+        // .flat() flattens to depth 1 only
+        socket.emit('processingDone',outputData.flat())
     }
 }
 
-socket.once('initialize', (url) => {
+socket.on('initialize', (url) => {
 
     // Need to close earlier workers and clear the worker team
     team.forEach((worker) => worker.terminate());
@@ -51,13 +55,12 @@ socket.once('initialize', (url) => {
 
         // Can optimize here, by dynamically calling postMessage for each onnessage
         myWorker.onmessage = (res) => {
-            // res -> outputData array -> [data,result]
-            // Currently outputing data and result
+            // Output in any format as needed
 
             // Can optimize further by only giving dataIndex
             // And generating data on master node
 
-            console.log(`calculation done from ${res.data[0][0]} to ${res.data[res.data.length-1][0]}`);
+            console.log(`calculation done from ${workerParams[i][0]} to ${workerParams[i][1]}`);
             
             // Since each worker works exactly once
             // Once they finish their array of tasks, it's complete and can be terminated
@@ -76,7 +79,7 @@ socket.once('initialize', (url) => {
     socket.emit('ready');
 })
 
-socket.once('range', (start, step, fileLoc) => {
+socket.on('range', (start, step, fileLoc) => {
 
     // Since data is really queues on the web worker side
     // We can just send the parameters to construct the input data
@@ -92,7 +95,6 @@ socket.once('range', (start, step, fileLoc) => {
 
     // generating params for each worker thread here
     // inputData is generated on the thread itself to save communication costs
-    var workerParams = []
     var workerStep = Math.ceil(step/cores)
 
     for(let i=0; i<(cores-1); i++){

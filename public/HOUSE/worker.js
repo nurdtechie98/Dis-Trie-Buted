@@ -45,7 +45,7 @@ onmessage = (e) => {
         // Also note that, reading a csv over here, as mentioned in corresponding config file
         makeTextFileLineIterator(e.data[2]).then((data) => {
             lines = data;
-            for(var i=e.data[0]; i<e.data[0]+e.data[1]; i++){
+            for(var i=e.data[0]; i<Math.min(e.data[0]+e.data[1], lines.length); i++){
                 var temp = lines[i].split(",");
                 if(temp.length > 1){
                     inputData.push(temp);
