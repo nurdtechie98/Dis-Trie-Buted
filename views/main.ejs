@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>Dis-Trie-Buted</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="problemList__container">
+            <div class="problemList__heading">Current Problems</div>
+            <div class="problemList__wrapper">
+                <!-- problem__container > problem__name, problem__reward, start button -->
+                <% for(var i=0; i<config.length; i++){ %>
+                    <div class="problem__container">
+                        <div class="problem__name"><%= config[i].name %></div>
+                        <div class="problem__reward"><%= config[i].reward %></div>
+                        <div class="problem__finished"><%= resDone[i] %> / <%= resTotal[i] %></div>
+                        <a href=./<%= config[i].id %> ><div class="problem__button">Start</div></a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </body>
+</html>

@@ -3,15 +3,15 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Test Page</title>
+    <title><%= config.name %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
-    <link rel="stylesheet" href="./styles.css">
-    <script src= "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js" > </script>
+    <link rel="stylesheet" href="/styles.css">
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <!-- Very very crucial the below line, to connect to a namespace dynamically -->
+    <script>const socket = io("/<%= config.id %>");</script>
 </head>
 <body>
     <div class="result">
-        <div class="count">Results - 0 primes</div>
         Current calculations -
         <div class="result__row">
             <div class="result__thread--heading">Thread</div>
@@ -21,6 +21,6 @@
     </div>
     <div class="final">        
     </div>
-    <script src= "socket.js" ></script>
 </body>
+<script src= "/socket.js" ></script>
 </html>

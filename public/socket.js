@@ -1,113 +1,149 @@
-// const socket = io.connect(`https://dis-trie-buted.herokuapp.com`)
-const socket = io.connect(`localhost:${process.env.PORT ? process.env.PORT : 8080}`)
+// Common script for all kinds of applications
+// Will ALWAYS be served to the slave node
+// Defines the communication between slave and master node
+
 const cores = navigator.hardwareConcurrency
-const body = document.getElementsByTagName("body")[0]
 
-var resultDisplay = []
-const resContainer = document.getElementsByClassName("result")[0];
-const fin = document.getElementsByClassName("final")[0];
-const count = document.getElementsByClassName("count")[0];
+// To store results returned from each thread
+var outputData = []
+// To store all worker threads, together forms a team
+var team = []
+// To store status of those threads, as they don't provide it implictly
+var stat = []
+// Parameter for workers
+var workerParams = []
+// results
+var resultRows = []
 
-var tot = 0;
+const resultContainer = document.getElementsByClassName("result")[0];
 
 for(let i=0; i<cores; i++){
-    let resRow = document.createElement("div")
-    resRow.classList.add(`result__row`)
-    resRow.id = `result__row--${i}`
-    let resRowThread = document.createElement("div");
-    let resRowData = document.createElement("div");
-    let resRowStatus = document.createElement("div");
+    const row = document.createElement("div");
+    const thread = document.createElement("div");
+    const data = document.createElement("div");
+    const status = document.createElement("div");
 
-    resRowThread.classList.add(`result__thread`)
-    resRowData.classList.add(`result__data`)
-    resRowStatus.classList.add(`result__status`)
+    row.classList.add("result__row");
+    thread.classList.add("result__thread");
+    data.classList.add("result__data");
+    status.classList.add("result__status");
 
-    resRowThread.textContent = `${i+1}`
+    row.appendChild(thread);
+    row.appendChild(data);
+    row.appendChild(status);
 
-    resRow.appendChild(resRowThread)
-    resRow.appendChild(resRowData)
-    resRow.appendChild(resRowStatus)
+    resultContainer.appendChild(row);
 
-    resContainer.appendChild(resRow)
+    thread.innerHTML = `Thread-${i}`;
 
-    resultDisplay.push([resRowData, resRowStatus])
+    resultRows.push([thread,data,status]);
 }
 
-var data = []
-var workers = []
-var stat = []
-var initData = []
+window.addEventListener('beforeunload', function (e) {
+    // Cancel the event
+    e.preventDefault();
+    // Chrome requires returnValue to be set
+    e.returnValue = '';
+});
 
+// to terminate a web worker
 const terminate = (id) => {
-    workers[id].terminate()
+    
+    // Job Done for the thread
+    resultRows[id][2].innerHTML = `Done`;
+
+    // Terminating a specific worker by accessing by id
+    team[id].terminate()
+    
+    // Setting the status of worker to 0
     stat[id] = 0
-
+    
     console.log("stat - ", stat)
-
-    if(stat.reduce((tot,cur) => tot+cur) === 0){
-        socket.emit('processingDone', [data,initData])
+    
+    // checking status of each thread, if it is 0 for all, emit processingDone
+    if(stat.reduce((total,cur) => total+cur) === 0){
+        console.log(`All threads have been terminated`)
+        // processingDone message sent to master node, with the data
+        // Sending all flattened data to master node, to release off some workload
+        // .flat() flattens to depth 1 only
+        socket.emit('processingDone',outputData.flat())
     }
 }
 
-socket.on('initialze', (loc)=>{
-    console.log(`Worker file located at ${loc}`)
+socket.on('initialize', (url) => {
+    
+    // Need to close earlier workers and clear the worker team
+    team.forEach((worker) => worker.terminate());
+    
+    // Reset the worker team and their status
+    team = [];
+    stat = [];
+    
+    // Need to create array of workers, and define their behaviour
     for(let i=0; i<cores; i++){
-        var myWorker = new Worker(loc)
-        myWorker.onmessage = (response) => {
-            // response => index | result | terminate ?
-            data[response.data[0] - initData[0]] = response.data[1]
-            resultDisplay[i][0].textContent = response.data[0];
-            resultDisplay[i][1].textContent = response.data[1];
-            if(response.data[1]){
-                tot += 1;
-                const primeDiv = document.createElement("div")
-                primeDiv.classList.add('final__data')
-                primeDiv.textContent = response.data[0]
-                fin.appendChild(primeDiv)
-                count.textContent = `Results - ${tot} primes`
-            }
-            if(response.data[2]){
-                console.log("Response - ", response.data)
-                terminate(i)
-            }
+        var myWorker = new Worker(url);
+        
+        // Assigning data as per cores, as that is what is received
+        outputData[i] = [];
+        
+        // Each worker will be allocated a fixed array of tasks to perform
+        // So each worker, spawns and executes exactly one time
+        
+        // Can optimize here, by dynamically calling postMessage for each onnessage
+        myWorker.onmessage = (res) => {
+            // Output in any format as needed
+            
+            // Can optimize further by only giving dataIndex
+            // And generating data on master node
+            
+            console.log(`calculation done from ${workerParams[i][0]} to ${workerParams[i][1]}`);
+            
+            // Since each worker works exactly once
+            // Once they finish their array of tasks, it's complete and can be terminated
+            outputData[i] = res.data;
+            terminate(i);
         }
-
-        workers.push(myWorker)
-        stat.push(1)
+        
+        // Finally pusing worker to the team
+        team.push(myWorker);
+        // Setting the status of worker to 1, as it is in use.
+        stat.push(1);
     }
-    console.log("Workers created as- ", workers)
-
-    socket.emit('ready')
+    
+    console.log('Team of myWorkers created as ->', team);
+    // Sending ready message to master node, to receive range next
+    socket.emit('ready');
 })
 
-// At this point this data is going to be range
-socket.on('range', (param)=>{
-    var curr = param[0]
-    var limit = param[1]
-
-    initData[0] = curr
-    initData[1] = limit
-
-    // Initialise result array
-    for(let i=0 ; i < limit-curr+1; i++){
-        data.push(0)
-    }
-
-    console.log(`Recieved range is ${curr} to ${limit}`)
+socket.on('range', (start, step, fileLoc) => {
     
-    while(curr < limit){
-        for(let i=0; i<cores; i++){
-            workers[i].postMessage([curr,limit])
-            resultDisplay[i][0].textContent = curr
-            resultDisplay[i][1].textContent = "None"
-            curr += 1
-            curr = Math.min(curr,limit)
-        }
-
-        if(curr === limit){
-            for(let i=0; i<cores; i++){
-                workers[i].postMessage([curr,limit])
-            }
-        }
+    // Since data is really queues on the web worker side
+    // We can just send the parameters to construct the input data
+    // This will save communication costs as well
+    
+    // Alternatively we can find a complex solution
+    // That reponds to every postMessage from workerScript
+    
+    // Creating starting parameters and step for each array
+    // Ex. start -> 1000 step -> 300 cores -> 8
+    // Need to divide as -> [1000 - 1037],[1038 - 1075],[1076 - 1113],[1114 - 1151]
+    // [1152 - 1189],[1190 - 1227],[1228 - 1265],[1266 - 1300]
+    
+    // generating params for each worker thread here
+    // inputData is generated on the thread itself to save communication costs
+    var workerStep = Math.ceil(step/cores)
+    
+    for(let i=0; i<(cores-1); i++){
+        workerParams.push([start + (i*workerStep), workerStep, fileLoc])
+    }
+    
+    // Last core will get all the remaining ones
+    workerParams.push([start + ((cores-1)*workerStep), step - ((cores-1)*workerStep) + 1, fileLoc])
+    
+    for(let i=0; i<cores; i++){
+        console.log(`Thread ${i} is alloted ${workerParams[i][0]} to ${workerParams[i][0] + workerParams[i][1]}`)
+        resultRows[i][1].innerHTML = `${workerParams[i][0]} to ${workerParams[i][0] + workerParams[i][1]}`;
+        resultRows[i][2].innerHTML = `Calculating...`;
+        team[i].postMessage(workerParams[i])
     }
 })
