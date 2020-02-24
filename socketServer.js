@@ -17,7 +17,7 @@ const createNamespace = (io, resultDict, configJson, configDict) => {
         var curr;
         // forEach loop cannot be broken out of
         for(var i=0; i<resultDict[namespace].answers.length; i++){
-            if(resultDict[namespace].answers[i].length == 0){
+            if(Array.isArray(resultDict[namespace].answers[i]) && resultDict[namespace].answers[i].length == 0){
                 curr = i;
                 break;
             }
@@ -74,7 +74,7 @@ const createNamespace = (io, resultDict, configJson, configDict) => {
                 console.log(`Work done from ${start + (step*curr)} to ${start + (step*(curr+1))}`)
                 
                 resultDict[namespace].answers.forEach((res) => {
-                    if(res.length > 0){
+                    if(Array.isArray(res) && res.length > 0){
                         console.log(res.length);
                     }
                 });

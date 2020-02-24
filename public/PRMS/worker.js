@@ -1,4 +1,4 @@
-const checkPrime = (data) => {
+ const checkPrime = (data) => {
     // Since the data is not actually serialised no need to transform explicitly
     // console.log(`data received at worker ${data}`)
     var flag = true
