@@ -39,13 +39,19 @@ const createNamespace = (io, resultDict, configJson, configDict) => {
             socket.on('ready', () => {
                 console.log(`Ready received -> ${socket.id} is calculating from ${curr}`);
                 socket.emit('range',start + (curr*step) + 1,step,readFile);
-                resultDict[namespace].answers[i] = [socket.id];
+                resultDict[namespace].answers[i] = socket.id;
             });
             // Disconnect is a defualt event provided by socket
             // Can change heartbeat time period as per needs
             socket.on('disconnect', () => {
                 console.log(`${socket.id} disconnected`);
-                // socket.server.close();
+                
+                // Check if abruptly closed and some work was assigned to it
+                for(let i=0; i<resultDict[namespace].answers.length; i++){
+                    if(resultDict[namespace].answers[i] == socket.id){
+                        resultDict[namespace].answers[i] = [];
+                    }
+                }
             });
             socket.on('processingDone', (outputData) => {
                 // outputData is according to index of the node
