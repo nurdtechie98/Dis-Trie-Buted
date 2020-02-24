@@ -3,6 +3,11 @@ const app = express();
 
 const fs = require('fs');
 const path = require('path');
+const cron = require('node-cron');
+
+const socketServer = require('./socketServer');
+const createNamespace = socketServer.createNamespace;
+
 
 // Setting up express config
 app.use(express.static(__dirname + '/public/'));
@@ -22,66 +27,75 @@ const io = require('socket.io')(server);
 
 // Getting current problems dynamically, as they are stored in public folder
 const getProblemsList = () => {
-        const problemsListPath = path.join(__dirname, `/public/`);
-        const problemsList = fs.readdirSync(problemsListPath)
-        return problemsList;
+    const problemsListPath = path.join(__dirname, `/public/`);
+    const problemsList = fs.readdirSync(problemsListPath)
+    return problemsList;
 }
 
-// Creating namespace, or socket communication for each problem
-// Can be otpimised by checking if namespace already exists ?
-const createNamespace = (namespace, start, end, step, url, readFile) => {
+const configDict = {}
+const resultDict = {}
 
-    const nsp = io.of(`/${namespace}`);
+const problemsList = getProblemsList();
 
-    nsp.on('connection',(socket)=>{
-        console.log(`${socket.id} connected to ${namespace}`);
+// Initial creation of configDict and resultDict which will be updated
 
-        var curr = start;
+// Update configDict when POST route hit
+// Update resultDict when processingDone received
 
-        // socket represents a single connection
-        // nsp represents the whole namespace
-        socket.emit('initialize',url);
-        socket.on('ready', () => {
-            console.log(`Ready received -> ${socket.id} is calculating from ${curr}`);
-            socket.emit('range',curr,step,readFile);
-            curr += step;
-        });
-        // Disconnect is a defualt event provided by socket
-        // Can change heartbeat time period as per needs
-        socket.on('disconnect', () => console.log(`${socket.id} disconnected`));
-        socket.on('processingDone', (outputData) => {
-            // outputData is according to index of the node
-            // To translate to input data, we need to store somewhere current index allocated to socket
-            // receiving data in division of cores
+// Writing to file performed asynchronously, through chron jobs
+// For config check if new key added to configDict
+// For resullt for now directly write every result, later can put a flush flag or change flag
 
-            console.log(`Processing done by ${socket.id}`);
-            for(let c=0; c<outputData.length; c++){
-                for(let i=0; i<outputData[c].length; i++){
-                    console.log(outputData[c][i]);
+// Thus, file operations done only while initialisation and in chron jobs
+// Eliminating complex thread handling issue
+
+// TODO: Research how databases can handle mutation to same rows concurrently, like the result for a problem
+problemsList.forEach((problem) => {
+    if(fs.lstatSync(path.join(__dirname, `/public/${problem}`)).isDirectory()){
+        const configPath = path.join(__dirname, `/public/${problem}/config.json`);
+        const resultPath = path.join(__dirname, `/public/${problem}/results.json`);
+
+        const configJson = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+        
+        if(!fs.existsSync(resultPath)){
+            const numSegments = Math.ceil((configJson.end - configJson.start)/configJson.step);
+            const answers = new Array();
+            for(let i=0; i<numSegments; i++){
+                answers.push(new Array());
+            }
+            const clients = new Object();
+            const data = JSON.stringify({clients, answers});
+            fs.writeFileSync(resultPath, data);
+            resultDict[configJson.id] = {clients, answers};
+        }
+        else{
+            const resultJson = JSON.parse(fs.readFileSync(resultPath, 'utf-8'));
+            var flag = true;
+            
+            for(let i=0; i<resultJson.answers.length; i++){
+                if(resultJson.answers[i].length == 0){
+                    flag = false;
+                    break;
                 }
             }
-        })
-    });
-    
-}
+
+            if(!flag){
+                resultDict[configJson.id] = resultJson;
+                configDict[configJson.id] = configJson;
+                createNamespace(io, resultDict, configJson, configDict);
+            }
+        }
+    }
+})
 
 // When root location hit, display all current problems available dynamically
 // All current problems fetched and data extracted from config.json
 // Render the main view with this dynamic data
 app.get("/", (_req,res) => {
-
+    
     // get all files config
-    const configsList = [];
-    const problemsList = getProblemsList();
-    problemsList.forEach((problem) => {
-        if(fs.lstatSync(path.join(__dirname, `/public/${problem}`)).isDirectory()){
-                const configPath = path.join(__dirname, `/public/${problem}/config.json`);
-                const configJson = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-                configsList.push(configJson);
-        }
-    })
-
-    res.render("main", {config: configsList});
+    
+    res.render("main", {config: Object.values(configDict)});
 })
 
 // Setting up routes for default requests, so that they do not hamper process
@@ -93,12 +107,8 @@ app.get("/robots.txt", (_req,res) => res.status(204));
 // Render the worker view, with config file
 app.get("/:namespace", (req,res) => {
     const namespace = req.params.namespace;
-    if(fs.lstatSync(path.join(__dirname, `/public/${namespace}`)).isDirectory()){
-        const configJsonPath = path.join(__dirname, `/public/${namespace}/config.json`);
-        const configJson = JSON.parse(fs.readFileSync(configJsonPath, 'utf-8'));
-        
-        createNamespace(namespace, configJson.start, configJson.end, configJson.step, `/${namespace}/${configJson.workerURL}`, configJson.readFile);
-        // create namespace for the current one
+    if(configDict.hasOwnProperty(namespace)){
+        const configJson = configDict[namespace];
         
         res.render("worker",{config: configJson});
     }
@@ -107,5 +117,9 @@ app.get("/:namespace", (req,res) => {
     }
 })
 
-
-
+cron.schedule('*/5 * * * *', () => {
+    Object.keys(resultDict).forEach((key) => {
+        const res = JSON.stringify(resultDict[key]);
+        fs.writeFile( path.join(__dirname, `/public/${key}/results.json`), res, 'utf-8', () => console.log(`Results updated to file for ${key}`));
+    })
+})
