@@ -156,6 +156,10 @@ socket.on('range', (start, step, fileLoc) => {
 })
 
 socket.on('getReward',(contractId) => {
+    // This is not async as can trigger to receive money and move on
+    // But in the case of POST, if contract is not created, no point creating problem
+    // Can cause issues while withdrawing
+    
     getIncentive.addEventListener("click", (e) => {
         e.preventDefault();
         
