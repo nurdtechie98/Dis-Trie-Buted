@@ -111,7 +111,7 @@ app.get("/", (_req,res) => {
     
         let temp = 0;
         resultDict[prb].answers.forEach((res) => {
-            if(Array.isArray(res) && res.length > 0){
+            if(res.length > 0){
                 temp += 1;
             }
         })
@@ -178,6 +178,24 @@ app.post("/addFile", upload.fields([{
         response = "config written"
     });
     console.log(response);
+
+
+    // Updating global structures and creating result.json
+
+    const resultPath = path.join(__dirname, `/public/${config.id}/results.json`)
+    const numSegments = Math.ceil((config.end - config.start)/config.step);
+    const answers = new Array();
+    for(let i=0; i<numSegments; i++){
+        answers.push(new Array());
+    }
+    const clients = new Object();
+    const data = JSON.stringify({clients, answers});
+    fs.writeFileSync(resultPath, data);
+
+    configDict[config.id] = config;
+    resultDict[config.id] = {clients, answers};
+    createNamespace(io, resultDict, config, configDict);
+
     res.redirect("/");
 })
 
