@@ -138,14 +138,15 @@ app.post("/addFile", upload.fields([{
     name: 'dataFile', maxCount: 1
   }]),(req,res) => {
     let config = new Object();
+    config['seriesId'] = req.body.seriesId;
     config['id'] = req.body.id;
     config['name'] = req.body.name;
     config['description'] = req.body.description;
-    config['reward'] = req.body.reward;
-    config['start'] = req.body.start;
-    config['end'] = req.body.end;
-    config['step'] = req.body.step;
-    config['maxTime'] = req.body.maxTime;
+    config['reward'] = parseInt(req.body.reward);
+    config['start'] = parseInt(req.body.start);
+    config['end'] = parseInt(req.body.end);
+    config['step'] = parseInt(req.body.step);
+    config['maxTime'] = parseInt(req.body.maxTime);
     config['workerURL'] =  "worker.js";
     config['workerURL'] =  "worker.js";
     config['readFile'] = null;
@@ -157,11 +158,17 @@ app.post("/addFile", upload.fields([{
         console.log("moved data file");
     })
 
-    fs.rename(__dirname+"/"+req.files.dataFile[0].path,__dirname+"/public/"+req.body.id+"/"+req.files.dataFile[0].originalname,()=>{
-        console.log("moved data file");
-        config['readFile'] = req.files.dataFile[0].originalname;
-    })
-    
+    // Check whether dataFile is present, only then create
+    if("dataFile" in req.files){
+        fs.rename(__dirname+"/"+req.files.dataFile[0].path,__dirname+"/public/"+req.body.id+"/"+req.files.dataFile[0].originalname,()=>{
+            console.log("moved data file");
+            config['readFile'] = req.files.dataFile[0].originalname;
+        })    
+    }
+    else{
+        config['readFile'] = null;
+    }
+
     console.log(response);
     var configString = JSON.stringify(config);
     fs.writeFileSync(__dirname+"/public/"+req.body.id+"/config.json",configString,(err)=>{
