@@ -160,9 +160,8 @@ socket.on('getReward',(contractId) => {
         e.preventDefault();
         
         // get the public address
-        const publicAddress = prompt("Enter the public address where you want to receive your tokens");
-
         // call the withdraw function
+        const publicAddress = prompt("Enter public address to receive reward");
         withdraw(contractId, publicAddress);
     })
 

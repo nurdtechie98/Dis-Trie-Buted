@@ -87,7 +87,7 @@ const createNamespace = (io, resultDict, configJson, configDict) => {
                 }
 
                 // Finally emitting the getReward message which contains the contract id to collect reward from
-                socket.emit('getReward', configJson.id)
+                socket.emit('getReward', configJson.seriesId)
             })
         }
     });   
