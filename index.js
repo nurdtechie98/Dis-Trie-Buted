@@ -3,6 +3,7 @@ const app = express();
 
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
 const cron = require('node-cron');
 
 const socketServer = require('./socketServer');
@@ -16,6 +17,7 @@ app.set('views', path.join(__dirname, '/views/'));
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+var upload = multer({dest:'tmp/'});
 
 process.env.PORT = process.env.PORT ? process.env.PORT : 8080;
 server = app.listen(process.env.PORT,()=>{
@@ -98,6 +100,7 @@ console.log("All files created, can start now...");
 // All current problems fetched and data extracted from config.json
 // Render the main view with this dynamic data
 app.get("/", (_req,res) => {
+    console.log("hitting")
     
     // calculate number of total steps and completed ones
     const resTotal = [];
@@ -123,6 +126,53 @@ app.get("/", (_req,res) => {
 // Setting up routes for default requests, so that they do not hamper process
 app.get("/favicon.ico", (_req,res) => res.status(204));
 app.get("/robots.txt", (_req,res) => res.status(204));
+
+app.get("/addFile", (req,res) => {
+    console.log("hitt");
+    res.render("fileupload");
+})
+
+app.post("/addFile", upload.fields([{
+    name: 'workerFile', maxCount: 1
+  }, {
+    name: 'dataFile', maxCount: 1
+  }]),(req,res) => {
+    let config = new Object();
+    config['id'] = req.body.id;
+    config['name'] = req.body.name;
+    config['description'] = req.body.description;
+    config['reward'] = req.body.reward;
+    config['start'] = req.body.start;
+    config['end'] = req.body.end;
+    config['step'] = req.body.step;
+    config['maxTime'] = req.body.maxTime;
+    config['workerURL'] =  "worker.js";
+    config['workerURL'] =  "worker.js";
+    config['readFile'] = null;
+    fs.mkdirSync(__dirname+"/public/"+req.body.id);
+    var response = "file to be uploaded"; 
+    console.log("=======",req.files.workerFile);
+    
+    fs.rename(__dirname+"/"+req.files.workerFile[0].path,__dirname+"/public/"+req.body.id+"/worker.js",()=>{
+        console.log("moved data file");
+    })
+
+    fs.rename(__dirname+"/"+req.files.dataFile[0].path,__dirname+"/public/"+req.body.id+"/"+req.files.dataFile[0].originalname,()=>{
+        console.log("moved data file");
+        config['readFile'] = req.files.dataFile[0].originalname;
+    })
+    
+    console.log(response);
+    var configString = JSON.stringify(config);
+    fs.writeFileSync(__dirname+"/public/"+req.body.id+"/config.json",configString,(err)=>{
+        if(err) {
+            console.log("write error");
+        }
+        response = "config written"
+    });
+    console.log(response);
+    res.redirect("/");
+})
 
 // Finally executing some namespace, we are starting that problem
 // Get config file and setup namespace for that problem

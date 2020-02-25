@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Add New Problem</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+</head>
+<body>
+    <h1> Add new problem</h1>
+    <form action="/addFile" enctype="multipart/form-data" method="POST">
+        <label type="text" for="id">Job Id</label>
+        <input name="id" id="id"/><br><br>
+        <label type="text" for="name">Name</label>
+        <input name="name" id="name"/><br><br>
+        <label type="text" for="description">Description</label>
+        <input name="description" id="description"/><br><br>
+        <label type="text" for="supplier">Supplier</label>
+        <input name="supplier" id="supplier"/><br><br>
+        <label type="text" for="reward">Reward</label>
+        <input name="reward" id="reward"/><br><br>
+        <label type="text" for="start">Start Value</label>
+        <input name="start" id="start"/><br><br>
+        <label type="text" for="end">End Value</label>
+        <input name="end" id="end"/><br><br>
+        <label type="text" for="step">Step</label>
+        <input name="step" id="step"/><br><br>
+        <label type="text" for="maxTime">Maximum Time</label>
+        <input name="maxTime" id="maxTime"/><br><br>
+        <label type="text" for="workerFile">Worker File</label>
+        <input type ="file" name="workerFile" id="workerFile"/><br><br>
+        <label type="text" for="dataFile">Data File</label>
+        <input type ="file" name="dataFile" id="dataFile"/><br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
