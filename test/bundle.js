@@ -29168,13 +29168,21 @@ var accounts;
 var contract;
 
 window.onload = async () => {
-    if(typeof web3 !== 'undefined'){
-        web3 = new Web3(web3.currentProvider);
-    } 
-    else{
-        console.log("Here!!");
-        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    if (window.ethereum) {
+        window.web3 = new Web3(ethereum);
+        try {
+            await ethereum.enable();
+        } catch (error) {
+            console.log("error!!!");
+        }
     }
+    else if (window.web3) {
+        window.web3 = new Web3(web3.currentProvider);
+    }
+    else {
+        console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+    }
+
     var abi = [
         {
             "constant": false,
@@ -29301,11 +29309,23 @@ window.onload = async () => {
     ]; 
     
     var address = '0x2a6fb74a957ccf52fa1ded96f40afe86ac8e6986';
+    await ethereum.enable();
     accounts = await web3.eth.getAccounts();
+    console.log(accounts);
     contract = new web3.eth.Contract(abi,address);
     console.log(contract);
 }
 
+window.deposit = async(id,incentive,address) => {
+    console.log(accounts);
+    var dep = await contract.methods.deposit(id,incentive,address).send(
+        {
+            from: accounts[0],
+            gas: '4700000',
+            value: '2000000000000000000'
+        }
+    )
+}
 
 window.getIncentive = async (id) => {
     var incentive = await contract.methods.getIncentive(id).call(
