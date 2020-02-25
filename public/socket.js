@@ -39,6 +39,13 @@ for(let i=0; i<cores; i++){
     resultRows.push([thread,data,status]);
 }
 
+const final = document.getElementsByClassName("final")[0];
+const getIncentive = document.createElement("div");
+getIncentive.innerHTML = "Get Reward!";
+getIncentive.classList.add("button");
+getIncentive.classList.add("hide");
+final.appendChild(getIncentive);
+
 window.addEventListener('beforeunload', function (e) {
     // Cancel the event
     e.preventDefault();
@@ -146,4 +153,18 @@ socket.on('range', (start, step, fileLoc) => {
         resultRows[i][2].innerHTML = `Calculating...`;
         team[i].postMessage(workerParams[i])
     }
+})
+
+socket.on('getReward',(contractId) => {
+    getIncentive.addEventListener("click", (e) => {
+        e.preventDefault();
+        
+        // get the public address
+        const publicAddress = prompt("Enter the public address where you want to receive your tokens");
+
+        // call the withdraw function
+        withdraw(contractId, publicAddress);
+    })
+
+    getIncentive.classList.remove("hide");
 })
