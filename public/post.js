@@ -12,7 +12,8 @@ form.addEventListener("submit", async (e) => {
     const seriesId = formData.get("seriesId");
     const publicAddress = formData.get("supplier");
     const incentive = formData.get("reward");
-    const val = `${Math.ceil((end - start) / step)}`;
+    const steps = `${Math.ceil((end - start) / step)}`;
+    const val = ''+(BigInt(steps)*BigInt(incentive));
 
     console.log(seriesId,publicAddress,incentive,val);
 
