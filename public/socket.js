@@ -39,6 +39,13 @@ for(let i=0; i<cores; i++){
     resultRows.push([thread,data,status]);
 }
 
+const final = document.getElementsByClassName("final")[0];
+const getIncentive = document.createElement("div");
+getIncentive.innerHTML = "Get Reward!";
+getIncentive.classList.add("button");
+getIncentive.classList.add("hide");
+final.appendChild(getIncentive);
+
 window.addEventListener('beforeunload', function (e) {
     // Cancel the event
     e.preventDefault();
@@ -147,4 +154,21 @@ socket.on('range', (start, step, fileLoc) => {
         resultRows[i][2].innerHTML = `Calculating...`;
         team[i].postMessage(workerParams[i])
     }
+})
+
+socket.on('getReward',(contractId) => {
+    // This is not async as can trigger to receive money and move on
+    // But in the case of POST, if contract is not created, no point creating problem
+    // Can cause issues while withdrawing
+    
+    getIncentive.addEventListener("click", (e) => {
+        e.preventDefault();
+        
+        // get the public address
+        // call the withdraw function
+        const publicAddress = prompt("Enter public address to receive reward");
+        withdraw(contractId, publicAddress);
+    })
+
+    getIncentive.classList.remove("hide");
 })

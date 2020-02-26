@@ -45,3 +45,22 @@
     margin: 5px;
     text-align: center;
 }
+
+.button{
+    display: inline-block;
+    background: bisque;
+    padding: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 2em auto;
+    transition: all .25s linear;
+}
+
+.button:hover{
+    box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+    transform: translateY(-5px);
+}
+
+.hide{
+    display: none;
+}

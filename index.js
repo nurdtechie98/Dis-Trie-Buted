@@ -111,7 +111,7 @@ app.get("/", (_req,res) => {
     
         let temp = 0;
         resultDict[prb].answers.forEach((res) => {
-            if(Array.isArray(res) && res.length > 0){
+            if(res.length > 0){
                 temp += 1;
             }
         })
@@ -138,14 +138,15 @@ app.post("/addFile", upload.fields([{
     name: 'dataFile', maxCount: 1
   }]),(req,res) => {
     let config = new Object();
+    config['seriesId'] = req.body.seriesId;
     config['id'] = req.body.id;
     config['name'] = req.body.name;
     config['description'] = req.body.description;
-    config['reward'] = req.body.reward;
-    config['start'] = req.body.start;
-    config['end'] = req.body.end;
-    config['step'] = req.body.step;
-    config['maxTime'] = req.body.maxTime;
+    config['reward'] = parseInt(req.body.reward);
+    config['start'] = parseInt(req.body.start);
+    config['end'] = parseInt(req.body.end);
+    config['step'] = parseInt(req.body.step);
+    config['maxTime'] = parseInt(req.body.maxTime);
     config['workerURL'] =  "worker.js";
     config['workerURL'] =  "worker.js";
     config['readFile'] = null;
@@ -157,11 +158,17 @@ app.post("/addFile", upload.fields([{
         console.log("moved data file");
     })
 
-    fs.rename(__dirname+"/"+req.files.dataFile[0].path,__dirname+"/public/"+req.body.id+"/"+req.files.dataFile[0].originalname,()=>{
-        console.log("moved data file");
-        config['readFile'] = req.files.dataFile[0].originalname;
-    })
-    
+    // Check whether dataFile is present, only then create
+    if("dataFile" in req.files){
+        fs.rename(__dirname+"/"+req.files.dataFile[0].path,__dirname+"/public/"+req.body.id+"/"+req.files.dataFile[0].originalname,()=>{
+            console.log("moved data file");
+            config['readFile'] = req.files.dataFile[0].originalname;
+        })    
+    }
+    else{
+        config['readFile'] = null;
+    }
+
     console.log(response);
     var configString = JSON.stringify(config);
     fs.writeFileSync(__dirname+"/public/"+req.body.id+"/config.json",configString,(err)=>{
@@ -171,6 +178,24 @@ app.post("/addFile", upload.fields([{
         response = "config written"
     });
     console.log(response);
+
+
+    // Updating global structures and creating result.json
+
+    const resultPath = path.join(__dirname, `/public/${config.id}/results.json`)
+    const numSegments = Math.ceil((config.end - config.start)/config.step);
+    const answers = new Array();
+    for(let i=0; i<numSegments; i++){
+        answers.push(new Array());
+    }
+    const clients = new Object();
+    const data = JSON.stringify({clients, answers});
+    fs.writeFileSync(resultPath, data);
+
+    configDict[config.id] = config;
+    resultDict[config.id] = {clients, answers};
+    createNamespace(io, resultDict, config, configDict);
+
     res.redirect("/");
 })
 

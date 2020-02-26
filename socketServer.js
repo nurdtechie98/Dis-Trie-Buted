@@ -85,6 +85,9 @@ const createNamespace = (io, resultDict, configJson, configDict) => {
                     delete resultDict[namespace]
                     delete configDict[namespace]
                 }
+
+                // Finally emitting the getReward message which contains the contract id to collect reward from
+                socket.emit('getReward', configJson.seriesId)
             })
         }
     });   
