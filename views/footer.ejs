@@ -1,0 +1,98 @@
+            <div class="radial">
+                <a href = "/"> <button class="fa fa-list-ol fa-3x" id="fa-1"></button> </a>
+                <a href = "/addFile"> <button class="fa fa-plus fa-3x" id="fa-2"></button> </a>
+                <a href = "/result"> <button class="fa fa-home fa-3x" id="fa-3"></button> </a>
+                <button class="fab">
+                <div class="fa fa-bars fa-3x" id="plus"></div>
+                </button>
+            </div> 
+            <style>
+                button:focus {
+                outline: 0;
+                }
+
+                .radial {
+                width: 80px;
+                height: 80px;
+                position: fixed;
+                right: 45px;
+                bottom: 45px;
+                background: #ff4081;
+                border-radius: 50%;
+                -webkit-transition: all 0.5s;
+                transition: all 0.5s;
+                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15), 0px 4px 8px rgba(0, 0, 0, 0.2);
+                }
+
+                .fab {
+                border: none;
+                color: white;
+                background-color: #ff4081;
+                border-radius: 50%;
+                width: 80px;
+                height: 80px;
+                position: fixed;
+                right: 45px;
+                bottom: 45px;
+                -webkit-transition: all 0.5s;
+                transition: all 0.5s;
+                }
+                .fab:hover {
+                background-color: #f30053;
+                }
+
+                #plus {
+                -webkit-transition: all 0.5s;
+                transition: all 0.5s;
+                margin-top: 7px;
+                }
+
+                #fa-1, #fa-2, #fa-3 {
+                position: fixed;
+                background: transparent;
+                border: none;
+                right: 60px;
+                bottom: 57px;
+                -webkit-transition: all 0.5s;
+                transition: all 0.5s;
+                color: white;
+                }
+                #fa-1:hover, #fa-2:hover, #fa-3:hover {
+                tansition-delay: 0s;
+                color: #ff8db3;
+                }
+
+                .radial.open #plus {
+                -webkit-transform: rotateZ(180deg) translate(-1px, 3px);
+                        transform: rotateZ(180deg) translate(-1px, 3px);
+                }
+                .radial.open #fa-1 {
+                -webkit-transition-delay: 0s;
+                        transition-delay: 0s;
+                -webkit-transform: translate(-110px, 10px);
+                        transform: translate(-110px, 10px);
+                }
+                .radial.open #fa-2 {
+                -webkit-transition-delay: 0.1s;
+                        transition-delay: 0.1s;
+                -webkit-transform: translate(-85px, -85px);
+                        transform: translate(-85px, -85px);
+                }
+                .radial.open #fa-3 {
+                -webkit-transition-delay: 0.2s;
+                        transition-delay: 0.2s;
+                -webkit-transform: translate(10px, -110px);
+                        transform: translate(10px, -110px);
+                }
+
+            </style>
+            <script>
+                $(document).ready(function(){
+                    $('.fab').click (function(){
+                        $('.radial').toggleClass('open');
+                    });
+                });
+            </script>
+        </div>
+    </body>
+</html>

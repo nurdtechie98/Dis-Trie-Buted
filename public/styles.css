@@ -40,3 +40,8 @@
     display: flex;
     justify-content: space-evenly;
 }
+
+.problem__form{
+    margin: 5px;
+    text-align: center;
+}

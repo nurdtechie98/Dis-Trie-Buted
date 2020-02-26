@@ -18,10 +18,10 @@ var resultRows = []
 const resultContainer = document.getElementsByClassName("result")[0];
 
 for(let i=0; i<cores; i++){
-    const row = document.createElement("div");
-    const thread = document.createElement("div");
-    const data = document.createElement("div");
-    const status = document.createElement("div");
+    const row = document.createElement("tr");
+    const thread = document.createElement("td");
+    const data = document.createElement("td");
+    const status = document.createElement("td");
 
     row.classList.add("result__row");
     thread.classList.add("result__thread");
@@ -51,6 +51,7 @@ const terminate = (id) => {
     
     // Job Done for the thread
     resultRows[id][2].innerHTML = `Done`;
+    resultRows[id][2].styles.color = 'green';
 
     // Terminating a specific worker by accessing by id
     team[id].terminate()

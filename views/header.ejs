@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Add New Problem</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <link rel="stylesheet" href= "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<style>
+        .navbar {
+            margin-top: 7px;
+            margin-bottom: 20px;
+            margin-left: 30px;
+            margin-right: 30px;
+            height: 80px;
+            font-size: 3rem;
+            border-radius: 0%;
+            background-color: yellow;
+        }
+
+        .navbar:hover {
+            box-shadow: #7F7C21 -1px 1px, #7F7C21 -2px 2px, #7F7C21 -3px 3px, #7F7C21 -4px 4px, #7F7C21 -5px 5px, #7F7C21 -6px 6px;
+            transform: translate3d(6px, -6px, 0);
+            transition-delay: 0s;
+            transition-duration: 0.4s;
+            transition-property: all;
+            transition-timing-function: line;
+        }
+        
+        nav a {
+            color : rgb(48, 65, 119);
+            text-decoration: none;
+        }
+
+        /* .navbar-brand {
+            font-size: 28px;
+            line-height: 20px;
+        } */
+        .navbar-brand-centered {
+            position: absolute;
+            left: 0%;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        .gtlt {
+            font-size: 4rem;
+            font-weight: bold;
+        }
+        @media screen and (max-width: 510px) {
+            .brand-name {
+                display: none;
+            }
+        }
+
+</style>
+<body>
+    <div>
+        <nav class="navbar navbar-light bg-light">
+            <a class="navbar-brand navbar-brand-centered" href="/">
+                    <span class="gtlt">&lt;
+                    <img src="data.svg" width="50" height="50" class="align-top" alt="">
+                    <span class="brand-name">Dis-Tri-Buted </span>
+                    &gt;</span>
+            </a>
+        </nav>
+      
