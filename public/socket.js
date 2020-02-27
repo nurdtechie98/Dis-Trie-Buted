@@ -58,7 +58,7 @@ const terminate = (id) => {
     
     // Job Done for the thread
     resultRows[id][2].innerHTML = `Done`;
-    resultRows[id][2].styles.color = 'green';
+    resultRows[id][2].style.color = 'green';
 
     // Terminating a specific worker by accessing by id
     team[id].terminate()
