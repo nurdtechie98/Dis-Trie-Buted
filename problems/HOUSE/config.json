@@ -1,0 +1,14 @@
+{
+    "id": "HOUSE",
+    "name": "House cost estimation",
+    "description": "A very crude implementation for house cost calculation, multiple by weights and sum",
+    "supplier": "supplierWalletAddress",
+    "workerURL": "worker.js",
+    "reward": 2000,
+    "start": 0,
+    "end": 31352,
+    "step": 6000,
+    "maxTime": 5,
+    "readFile": "/static/HOUSE/housing.csv",
+    "writeFile": null
+}
