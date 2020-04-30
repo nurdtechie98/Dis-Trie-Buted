@@ -147,9 +147,8 @@ app.post("/addFile", upload.fields([{
     config['end'] = parseInt(req.body.end);
     config['step'] = parseInt(req.body.step);
     config['maxTime'] = parseInt(req.body.maxTime);
-    config['workerURL'] =  "worker.js";
-    config['workerURL'] =  "worker.js";
-    config['readFile'] = null;
+    config['workerURL'] =  req.files['workerFile'][0].originalname;
+    config['readFile'] = req.files['dataFile'][0].originalname;
     fs.mkdirSync(__dirname+"/public/"+req.body.id);
     var response = "file to be uploaded"; 
     console.log("=======",req.files.workerFile);
