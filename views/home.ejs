@@ -1,11 +1,75 @@
 <%- include('./header') %>
 
-<h1>This is the home page</h1>
+    <section id="welcome-section">
+        <h1 id="welcome-section--heading"><span>&nbsp;Dis-Tri-Buted&nbsp;<span></h1>
+        <h2 id="welcome-section--subheading"><span>&nbsp;Incetivised Volunteer Computing&nbsp;<span></h2>
+    </section>
+    <section class="task-title"><h3>Have A Computational Problem ?</h3></section>
+    <section id="projects">  
+        <div class="project-tile project-front project-1-front">
+            <div class="project-front-btn"><a style="text-decoration: none;" class="tile-btn btn">1</a></div>
+            <div class="project-back project-1-back">
+                <h3>Create New Task</h3>
+            </div>
+            
+        </div>
+        <div class="project-tile project-front project-2-front">
+            <div class="project-front-btn "><a style="text-decoration: none;" class="tile-btn btn ">2</a></div>
+            <div class="project-back project-2-back">
+                <h3>Set the Incentive</h3>
+            </div>
+            
+        </div>
+        <div class="project-tile project-front project-3-front">
+            <div class="project-front-btn"><a style="text-decoration: none;" class="tile-btn btn">3</a></div>
+            <div class="project-back project-3-back">
+                <h3>Add Worker File</h3>
+            </div>
+            
+            
+        </div>   
+    </section>
+    <section class="task-title"><h3>Have Idle Computing Power ?</h3></section>
+    <section id="projects">  
+        <div class="project-tile project-front project-2-front">
+            <div class="project-front-btn"><a style="text-decoration: none;" class="tile-btn btn">1</a></div>
+            <div class="project-back project-2-back">
+                <h3>Select The Task</h3>
+            </div>
+            
+        </div>
+        <div class="project-tile project-front project-3-front">
+            <div class="project-front-btn "><a style="text-decoration: none;" class="tile-btn btn ">2</a></div>
+            <div class="project-back project-3-back">
+                <h3>Leave The Task Running</h3>
+            </div>
+            
+        </div>
+        <div class="project-tile project-front project-1-front">
+            <div class="project-front-btn"><a style="text-decoration: none;" class="tile-btn btn">3</a></div>
+            <div class="project-back project-1-back">
+                <h3>Claim Your Incentive</h3>
+            </div>
+            
+            
+        </div>   
+    </section>
+    <div class="heading" id="contact"><h2 class="section-heading contact-heading"><span>&ensp;Contact&ensp;</span></h2></div>
+    <section id="contact-section">
+        <div class="contact-icons">
+            <a href="" target="_blank" id="profile-link" style="text-align: center;"><i class="fa fa-free-code-camp fa-3x" aria-hidden="true"></i></a>
+            <a href="" target="_blank" id="profile-link" style="text-align: center;"><i class="fa fa-twitter fa-3x" aria-hidden="true"></i></a>
+            <a href="" target="_blank" id="profile-link" style="text-align: center;"><i class="fa fa-github fa-3x" aria-hidden="true"></i></a>
+            <a href="" target="_blank" id="profile-link" style="text-align: center;"><i class="fa fa-linkedin fa-3x" aria-hidden="true"></i></a>
+        </div>
+        <h3 class="footer-line">Made by Team Anything</h3>
+    </section>
 
 <style>
-    @charset "UTF-8";
     @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
-
+    html {
+        scroll-behavior: smooth;
+    }
     body {
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
@@ -22,8 +86,445 @@
     color: #4DC3FA;
     }
 
-    a {
-        color: #FB667A;
+    #welcome-section {
+        height: 70vh;
+        background-color:rgba(31,39,57);
+        -webkit-clip-path: polygon(0 0, 100% 0%, 100% 75%, 0% 100%);
+        clip-path: polygon(0 0, 100% 0%, 100% 75%, 0% 100%);
+    }
+
+    #welcome-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    }
+
+    #welcome-section--heading {
+        padding: 5%;
+        padding-bottom: 0%;
+        font-family: 'Open Sans';
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 900;
+        font-size: 7em;
+    }
+
+    #welcome-section--subheading {
+        text-align: center;
+        font-family: 'Open Sans';
+        color: yellow;
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: 3em;
+        height: 20vh;
+    }
+
+    .section-heading {
+        text-align: center;
+        font-family: 'Open Sans';
+        font-size: 3em;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        transform: skew(-13deg);
+        background-color: lightgray;
+        display: inline-block;
+        color: rgb(255, 255, 0);
+        background: rgba(31,39,57); 
+    }
+    .section-heading span {
+        display: block;
+        transform: skew(+13deg);
+    }
+
+    .heading {
+        padding: 5% 20% 25% 20%;
+        background-color: whitesmoke;
+        display: flex;
+        justify-content: center;
+    }
+
+    .task-title {
+        text-align: center;
+        color: #ff4081;
+        font-weight: bold;
+    }
+
+    .footer-line{
+        text-align: center;
+        color: yellow;
+        margin-top: 10%;
+    }
+
+    #projects {
+        padding: 15% 20% 5% 20%;
+        background-color: whitesmoke;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-column-gap: 5%;
+        grid-row-gap: 5%;
+        margin-top: -13%;
+    }
+    .project-tile {
+        background-color: aqua;
+        height: 250px;
+        border-radius: 5px;
+        overflow: hidden;
+        transition: all ease-in .2s;    
+        color: white;
+        box-shadow: 0px 25px 36px 5px rgba(0,0,0,0.19);
+    }
+    .project-tile:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+        box-shadow: 0px 5px 36px 5px rgba(0,0,0,0.19);
+    } 
+
+    .project-front {
+        position: relative;
+        background-color: aquamarine;
+        display: grid;
+        width: 100%;
+    }
+
+    .tile-btn {
+        font-family: 'open sans';
+        border: none;
+        background-color: transparent;
+        font-size: 40px;
+        cursor: pointer;
+        border-bottom: none;
+        color: white;
+    }
+
+
+    .project-front  p {
+        background: transparent;    
+    }
+    .project-back {
+        position: relative;
+        -webkit-clip-path: polygon(0 0, 100% 0%, 100% 38%, 0 74%);
+        clip-path: polygon(0 0, 100% 0%, 100% 38%, 0 74%);
+        background-color: antiquewhite;
+        width: 100%;
+        height: 100%;
+        
+    }
+    .project-front-btn {
+    position: absolute;
+    left: 50%;
+    bottom: 5%;
+    transform: translate(-50%, -50%);
+    margin: 0 auto;
+    color: white;
+        
+    }
+    .project-back h3{
+        font-family: 'Open Sans';
+        text-align: center;
+        padding-top: 15%;
+        padding-bottom: 15%;
+    }
+    .project-1-front {
+        background-color: blueviolet;
+    }
+    .project-2-front {
+        background-color: limegreen;
+    }
+    .project-3-front {
+        background-color: deeppink;
+    }
+        
+    .project-1-back {
+            background: linear-gradient(to right bottom, #feac5e, #c779d0, #4bc0c8);
+    }
+
+    .project-2-back {
+        background: linear-gradient(to right top, #fdfc47, #24fe41);
+    }
+    .project-3-back {
+        background: linear-gradient(to right bottom, #ff5f6d, #ffc371);
+    }
+    .contact-heading {
+    margin-bottom: 10%;
+    }
+
+    #contact-section {
+        padding: 10% 20% 5% 20%;
+        height: 70vh;
+        background: rgba(31,39,57);;
+        clip-path: polygon(33% 36%, 73% 5%, 100% 17%, 100% 100%, 0 100%, 0 47%, 12% 25%);
+        margin-top: -30%;
+    }
+
+    .contact-icons {
+        margin-top: 20%;
+        padding-left: 28%;
+        padding-right: 28%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-column-gap: 5px;
+        
+    }
+
+    .contact-icons i {
+        text-align: center;
+        color: yellow;
+        cursor: pointer;
+        background-color: transparent;
+        transition: color ease-in .2s;
+
+    }
+    .contact-icons i:hover {
+        color: #ff4081;
+    }
+
+
+    @media only screen and (max-width: 960px) {
+        #welcome-section--heading {
+            font-size: 4em;
+        }
+        #welcome-section--subheading {
+            font-size: 3em;
+        }
+        #section-about-me {
+        margin-top: -17%;   
+        }
+        
+        .heading-underlined {
+            font-size: 1.0em;    
+        }
+        
+        .section-heading span {
+            font-size: .75em;
+        }
+        .project-icon {
+            margin-left: 20%;
+            height: 300px;
+            width: 300px;
+            padding-right: 0;
+        }
+        .project-title{
+            width: 300px;
+            margin-left: -50%;
+            
+        }
+        .project-tile {
+        height:300px;
+        width:220px;
+        margin-bottom: 50px;
+            
+        }
+        #projects  {
+            grid-template-columns: 1fr 1fr;
+        }
+        .contact-icons {
+            padding-top: 10%;
+            grid-column-gap: 15px;
+            padding-right: 0;
+            padding-left: 0;
+        }
+        .project-front {
+            align-self: center;
+            justify-self: center;
+        }
+        .footer {
+            margin-top: 10;
+            padding-bottom: 20px;
+            
+        }
+    } 
+
+    @media only screen and (max-width: 600px) {
+        
+        #welcome-section--heading {
+            padding-top: 10%;
+            font-size: 3em;
+        }
+
+        #welcome-section--subheading {
+            font-size: 2em;
+        }
+        #section-about-me {
+        margin-top: -25%; 
+        padding-top: 35%;
+        }
+        
+        .heading-underlined {
+            font-size: 0.65em;    
+        }
+        
+        .section-heading span {
+            font-size: .75em;
+        }
+        .section-para {
+            font-size: 0.85em;
+        }
+        .project-icon {
+            margin-left: 0%;
+            height: 180px;
+            width: 180px;
+            padding-right: -15%;
+        }
+        .project-icon--title {
+            height: 100px;
+            width: 100px;
+        }
+        .project-icon--title img {
+            height: 10px;
+            margin-top: -20%;
+            width: 100px;
+            overflow: hidden;
+        
+        }
+        .project-title{
+        width: 200px;
+        margin-left: 5px;
+            
+        }
+        .project-tile {
+        height:300px;
+        width:250px;
+        margin-bottom: 50px;
+            
+        }
+        
+        #projects  {
+            grid-template-columns: 1fr;
+            padding: 30% 0% 0% 0%;
+            background-color: whitesmoke;
+            display: grid;
+            grid-column-gap: 5%;
+            grid-row-gap: 5%;
+            margin-top: -7%;
+        
+            
+        }
+        .contact-icons {
+            padding-top: 10%;
+            grid-column-gap: 15px;
+            padding-right: 0;
+            padding-left: 0;
+        }
+        .footer {
+            margin-top: 20%;
+            
+        }
+    } 
+
+    @media only screen and (max-width: 400px) {
+        #welcome-section--heading {
+            padding-top: 0%;
+            font-size: 2em;
+        }
+
+        #welcome-section--subheading {
+            font-size: 1em;
+        }
+        
+        #navbar--logo-title h2 {
+            font-size: 1em;
+            margin-left: -15px;
+        }
+        #navbar--menu ul li a{
+            font-size: 0.50em;
+            margin-right: 10px;
+            
+        }
+        #navbar--menu{
+            margin-top: -10px;
+            padding: 0;
+        }
+        
+        #welcome-section--heading {
+            padding-top: 40%;
+            font-size: 3em;
+        }
+        #section-about-me {
+        margin-top: -35%; 
+        padding-top: 35%;
+        }
+        
+        .heading-underlined {
+            font-size: 0.65em;    
+        }
+        
+        .section-heading span {
+            font-size: .45em;
+        }
+        .section-para {
+            font-size: 0.85em;
+        }
+        .ongoing-project--tile {
+            grid-template-columns: 1fr;
+            padding: 10%;
+        }
+        .project-icon {
+            margin-left: 0%;
+            height: 200px;
+            width: 200px;
+            display: none;
+            
+        }
+        .project-icon--title {
+            height: 150px;
+            width: 150px;
+        
+        }
+        .project-icon--title img {
+            height: 20px;
+            margin-top: -10%;
+            width: 150px;
+            overflow: hidden;
+        
+        }
+        .project-title p{
+        margin-top: 30px;
+        }
+        
+        .btn {
+            align-content: left;
+            display: inline-flex;
+        }
+        .project-tile {
+        height:300px;
+        width:250px;
+        margin-bottom: 50px;
+            
+        }
+        
+        #projects  {
+            grid-template-columns: 1fr;
+            padding: 30% 0% 0% 0%;
+            background-color: whitesmoke;
+            display: grid;
+            grid-column-gap: 5%;
+            grid-row-gap: 5%;
+            margin-top: -7%;
+        
+            
+        }
+        .heading {
+            padding-top: 20%;
+            padding-bottom: 40%;
+            margin-top: -15%;
+        }
+        .contact-icons {
+            padding-top: 50%;
+            grid-column-gap: 15px;
+            padding-right: 0;
+            padding-left: 0;
+            
+            
+        }
+        #contact-section {
+            margin-top: -50%;
+        }
+        .footer {
+            margin-top: 20%;
+            font-size: smaller;
+            padding-bottom: 25px;
+            
+        }
     }
 </style>
 

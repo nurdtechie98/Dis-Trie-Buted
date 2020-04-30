@@ -4,7 +4,8 @@
   "description": "volunteer computing made easy",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon --ignore 'public/*/results.json' index.js"
+    "test": "nodemon --ignore 'public/*/results.json' index.js",
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
