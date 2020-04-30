@@ -199,6 +199,11 @@ app.post("/addFile", upload.fields([{
     res.redirect("/");
 })
 
+app.get("/landing",(req,res)=>{
+    console.log("yesss")
+    res.render("home")
+})
+
 // Finally executing some namespace, we are starting that problem
 // Get config file and setup namespace for that problem
 // Render the worker view, with config file
