@@ -34,7 +34,7 @@ onmessage = (e) => {
         // Creating input data from certain file
         async function makeTextFileLineIterator(fileURL) {
             const utf8Decoder = new TextDecoder('utf-8');
-            const response = await fetch(fileURL);
+            const response = await fetch(fileURL, {headers: {Range: `bytes=${e.data[0]}-${e.data[0] + e.data[1]}`}});
             const reader = response.body.getReader();
             let { value: chunk, done: readerDone } = await reader.read();
             chunk = chunk ? utf8Decoder.decode(chunk) : '';
@@ -45,7 +45,7 @@ onmessage = (e) => {
         // Also note that, reading a csv over here, as mentioned in corresponding config file
         makeTextFileLineIterator(e.data[2]).then((data) => {
             lines = data;
-            for(var i=e.data[0]; i<Math.min(e.data[0]+e.data[1], lines.length); i++){
+            for(var i=0; i<lines.length - 1; i++){
                 var temp = lines[i].split(",");
                 if(temp.length > 1){
                     inputData.push(temp);
