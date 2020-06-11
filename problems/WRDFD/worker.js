@@ -26,14 +26,7 @@ onmessage = (e) => {
         // Since reading file is async need async await, then...
         // Also note that, reading a csv over here, as mentioned in corresponding config file
         makeTextFileLineIterator(e.data[2]).then((data) => {
-            lines = data;
-            for(var i=0; i<lines.length - 1; i++){
-                var temp = lines[i].split(",");
-                if(temp.length > 1){
-                    inputData.push(temp);
-                }
-            }
-
+            lines = inputData;
             console.log(inputData.length);
 
             // This is calculated synchronously, since single threaded
