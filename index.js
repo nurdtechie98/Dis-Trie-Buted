@@ -224,3 +224,7 @@ cron.schedule('*/5 * * * *', () => {
         fs.writeFile( path.join(__dirname, `/public/${key}/results.json`), res, 'utf-8', () => console.log(`Results updated to file for ${key}`));
     })
 })
+
+module.exports = {
+    getProblemsList
+};

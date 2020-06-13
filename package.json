@@ -4,7 +4,8 @@
   "description": "volunteer computing made easy",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon --ignore 'public/*/results.json' index.js",
+    "test": "mocha --reporter dot --exit",
+    "coverage": "nyc --reporter html --reporter text npm test",
     "start": "nodemon index.js"
   },
   "author": "",
@@ -18,6 +19,10 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
-    "nodemon": "^1.19.3"
+    "axios": "^0.19.2",
+    "chai": "^4.2.0",
+    "mocha": "^7.1.2",
+    "nodemon": "^1.19.3",
+    "nyc": "^15.0.1"
   }
 }
