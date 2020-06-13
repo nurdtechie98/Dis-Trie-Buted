@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "volunteer computing made easy",
   "main": "index.js",
+  "nodemonConfig": {
+    "ignore": ["public/*/results.json"]
+  },
   "scripts": {
-    "test": "nodemon --ignore 'public/*/results.json' index.js",
+    "test": "nodemon index.js",
     "start": "nodemon index.js"
   },
   "author": "",
