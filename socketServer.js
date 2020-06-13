@@ -82,8 +82,6 @@ const createNamespace = (io, resultDict, configJson, configDict) => {
                 // Removing entries from dictionary since work done
                 if(start + (step*(curr+1)) >= end){
                     console.log(`Every segment of work done for ${namespace}`)
-                    delete resultDict[namespace]
-                    delete configDict[namespace]
                 }
 
                 // Finally emitting the getReward message which contains the contract id to collect reward from
