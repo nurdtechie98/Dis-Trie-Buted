@@ -168,6 +168,7 @@ socket.on('getReward',(contractId) => {
         // call the withdraw function
         const publicAddress = prompt("Enter public address to receive reward");
         withdraw(contractId, publicAddress);
+        getIncentive.classList.add("hide");
     })
 
     getIncentive.classList.remove("hide");
