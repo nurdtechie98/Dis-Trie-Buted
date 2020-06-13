@@ -138,8 +138,9 @@ app.post("/addFile", upload.fields([{
     name: 'dataFile', maxCount: 1
   }]),(req,res) => {
     let config = new Object();
+    console.log(req.body)
     config['seriesId'] = req.body.seriesId;
-    config['id'] = req.body.id;
+    config['id'] = req.body.seriesId;
     config['name'] = req.body.name;
     config['description'] = req.body.description;
     config['reward'] = parseInt(req.body.reward);
@@ -149,17 +150,17 @@ app.post("/addFile", upload.fields([{
     config['maxTime'] = parseInt(req.body.maxTime);
     config['workerURL'] =  req.files['workerFile'][0].originalname;
     config['readFile'] = req.files['dataFile'] ? req.files['dataFile'][0].originalname : null;
-    fs.mkdirSync(__dirname+"/public/"+req.body.id);
+    fs.mkdirSync(__dirname+"/public/"+req.body.seriesId);
     var response = "file to be uploaded"; 
     console.log("=======",req.files.workerFile);
     
-    fs.rename(__dirname+"/"+req.files.workerFile[0].path,__dirname+"/public/"+req.body.id+"/worker.js",()=>{
+    fs.rename(__dirname+"/"+req.files.workerFile[0].path,__dirname+"/public/"+req.body.seriesId+"/worker.js",()=>{
         console.log("moved data file");
     })
 
     // Check whether dataFile is present, only then create
     if("dataFile" in req.files){
-        fs.rename(__dirname+"/"+req.files.dataFile[0].path,__dirname+"/public/"+req.body.id+"/"+req.files.dataFile[0].originalname,()=>{
+        fs.rename(__dirname+"/"+req.files.dataFile[0].path,__dirname+"/public/"+req.body.seriesId+"/"+req.files.dataFile[0].originalname,()=>{
             console.log("moved data file");
             config['readFile'] = req.files.dataFile[0].originalname;
         })    
@@ -170,7 +171,7 @@ app.post("/addFile", upload.fields([{
 
     console.log(response);
     var configString = JSON.stringify(config);
-    fs.writeFileSync(__dirname+"/public/"+req.body.id+"/config.json",configString,(err)=>{
+    fs.writeFileSync(__dirname+"/public/"+req.body.seriesId+"/config.json",configString,(err)=>{
         if(err) {
             console.log("write error");
         }
