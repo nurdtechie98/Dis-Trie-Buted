@@ -139,14 +139,14 @@ socket.on('range', (start, step, fileLoc) => {
     
     // generating params for each worker thread here
     // inputData is generated on the thread itself to save communication costs
-    var workerStep = Math.ceil(step/cores)
+    var workerStep = Math.floor(step/cores)
     
     for(let i=0; i<(cores-1); i++){
         workerParams.push([start + (i*workerStep), workerStep, fileLoc])
     }
     
     // Last core will get all the remaining ones
-    workerParams.push([start + ((cores-1)*workerStep), step - ((cores-1)*workerStep) + 1, fileLoc])
+    workerParams.push([start + ((cores-1)*workerStep), step - ((cores-1)*workerStep), fileLoc])
     
     for(let i=0; i<cores; i++){
         console.log(`Thread ${i} is alloted ${workerParams[i][0]} to ${workerParams[i][0] + workerParams[i][1]}`)
