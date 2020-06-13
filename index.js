@@ -139,6 +139,7 @@ app.post("/addFile", upload.fields([{
   }]),(req,res) => {
     let config = new Object();
     console.log(req.body)
+    config['email'] = req.body.email;
     config['seriesId'] = req.body.seriesId;
     config['id'] = req.body.seriesId;
     config['name'] = req.body.name;
@@ -225,3 +226,7 @@ cron.schedule('*/5 * * * *', () => {
         fs.writeFile( path.join(__dirname, `/public/${key}/results.json`), res, 'utf-8', () => console.log(`Results updated to file for ${key}`));
     })
 })
+
+module.exports = {
+    getProblemsList
+};
