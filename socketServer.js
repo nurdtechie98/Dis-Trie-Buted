@@ -84,7 +84,9 @@ const createNamespace = (io, resultDict, configJson, configDict) => {
                 // Removing entries from dictionary since work done
                 if(start + (step*(curr+1)) >= end){
                     console.log(configJson.email, configJson.id, configJson.name)
-                    sendNotif(configJson.email, `http://localhost:8080/${configJson.id}/results.json`, configJson.name)
+                    if(configJson.email != null){
+                        sendNotif(configJson.email, `http://localhost:8080/${configJson.id}/results.json`, configJson.name)
+                    }
                     console.log(`Every segment of work done for ${namespace}`)
                 }
 
