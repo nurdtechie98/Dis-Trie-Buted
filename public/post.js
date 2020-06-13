@@ -23,8 +23,9 @@ form.addEventListener("submit", async (e) => {
     const seriesId = makeid(12);
     formData.append("seriesId",seriesId);
     const publicAddress = formData.get("supplier");
-    const incentive = formData.get("reward");
-    formData.append("step",step)
+    const incentive = ''+BigInt(Number(1000000000000000000)*Number(formData.get("reward_per_user")));
+    formData.append("step",step);
+    formData.append("reward",incentive);
     const val = ''+(BigInt(jobs)*BigInt(incentive));
 
     console.log(seriesId,publicAddress,incentive,val);
