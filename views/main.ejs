@@ -14,9 +14,12 @@
                 <% for(var i=0; i<config.length; i++){ %>
                         <tr>
                             <td><%= config[i].name %></td>
-                            <td><%= config[i].reward %></td>
+                            <td><%= Number(config[i].reward) / Number(1000000000000000000) %> ETH</td>
                             <td><%= resDone[i] %> / <%= resTotal[i] %></td>
-                            <td> <a href=./<%= config[i].id %> > Start </a> </tdv>
+                            <td> <%if (resDone[i] < resTotal[i] ) { %>
+                                <a href=./<%= config[i].id %> > Start </a>
+                                <% } %>
+                            </td>
                         </tr>
                 <% } %>
             </tbody>

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "volunteer computing made easy",
   "main": "index.js",
+  "nodemonConfig": {
+    "ignore": ["public/*/results.json"]
+  },
   "scripts": {
     "test": "mocha --reporter dot --exit",
     "coverage": "nyc --reporter html --reporter text npm test",

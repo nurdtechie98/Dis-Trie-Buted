@@ -5,7 +5,7 @@
                         <h1> <span class="yellow">Add</span> <span class="blue">&lt;</span>New<span class="blue">&gt;</span> <span class="yellow">Problems</pan></h1>
                 </div>
                 <form id="msform" action="/addFile" enctype="multipart/form-data" method="POST">
-                    <!-- progressbar -->
+                     <!-- progressbar -->
                     <ul id="progressbar">
                         <li class="active">Task Name</li>
                         <li>Incentive Details</li>
@@ -16,8 +16,7 @@
                     <fieldset>
                         <h2 class="fs-title">Task Name</h2>
                         <h3 class="fs-subtitle">Tell us abput the task</h3>
-                        <input type="text" name="id" placeholder="Task ID"/>
-                        <input type="text" name="name" placeholder="Task Name"/>
+                        <input type="text" name="name" placeholder="Task Name" required/>
                         <input type="text" name="description" placeholder="Description"/>
                         <input type="button" name="next" class="next action-button" value="Next"/>
                     </fieldset>
@@ -25,8 +24,7 @@
                         <h2 class="fs-title">Incentive Details</h2>
                         <h3 class="fs-subtitle">Tell us about the Incentive for the task</h3>
                         <input type="text" name="supplier" placeholder="Public Address of Uploader"/>
-                        <input type="text" name="reward" placeholder="Reward"/>
-                        <input type="text" name="seriesId" placeholder="Series Id"/>
+                        <input type="text" name="reward_per_user" placeholder="Reward per user (in eth)"/>
                         <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
                         <input type="button" name="next" class="next action-button" value="Next"/>
                     </fieldset>
@@ -35,7 +33,7 @@
                         <h3 class="fs-subtitle">Configure the task property</h3>
                         <input type="text" name="start" placeholder="Start Value"/>
                         <input type="text" name="end" placeholder="End Value"/>
-                        <input type="text" name="step" placeholder="Step Value across range"/>
+                        <input type="text" name="jobs" placeholder="No of jobs"/>
                         <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
                         <input type="button" name="next" class="next action-button" value="Next"/>
                     </fieldset>

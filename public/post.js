@@ -1,19 +1,32 @@
 const form = document.querySelector('form');
 
+function makeid(length) {
+    var result           = '';
+    var characters       = '0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+ }
+
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     var formData = new FormData(form);
     const start = parseInt(formData.get("start"));
     const end = parseInt(formData.get("end"));
-    const step = parseInt(formData.get("step"));
+    const jobs = parseInt(formData.get("jobs"));
+    const step = `${Math.ceil((end - start) / jobs)}`;
 
     // Need to call the contract function here
-    const seriesId = formData.get("seriesId");
+    const seriesId = makeid(12);
+    formData.append("seriesId",seriesId);
     const publicAddress = formData.get("supplier");
-    const incentive = formData.get("reward");
-    const steps = `${Math.ceil((end - start) / step)}`;
-    const val = ''+(BigInt(steps)*BigInt(incentive));
+    const incentive = ''+BigInt(Number(1000000000000000000)*Number(formData.get("reward_per_user")));
+    formData.append("step",step);
+    formData.append("reward",incentive);
+    const val = ''+(BigInt(jobs)*BigInt(incentive));
 
     console.log(seriesId,publicAddress,incentive,val);
 

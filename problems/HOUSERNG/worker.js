@@ -1,6 +1,24 @@
 // Algorithm to execute on each worker thread
-const summation = (line) => {
-    return line.includes('puppy');
+const summation = (data) => {
+
+    var sum = 0;
+
+    // sum += weight * attribute value
+    sum += 85 * parseFloat(data[0]);
+    sum += 10 * parseFloat(data[1]);
+    sum += 70 * parseFloat(data[2]);
+    sum += 100 * parseFloat(data[3]);
+    sum += 90 * parseFloat(data[4]);
+    sum += 80 * parseFloat(data[5]);
+    sum += 45 * parseFloat(data[6]);
+    sum += 50 * parseFloat(data[7]);
+    sum += 20 * parseFloat(data[8]);
+    sum += 40 * parseFloat(data[9]);
+    sum += 30 * parseFloat(data[10]);
+    sum += 50 * parseFloat(data[11]);
+    sum += 10 * parseFloat(data[12]);
+    
+    return sum;
 }
 
 // receive parameters for the algorithm, from socket.js
@@ -26,15 +44,18 @@ onmessage = (e) => {
         // Since reading file is async need async await, then...
         // Also note that, reading a csv over here, as mentioned in corresponding config file
         makeTextFileLineIterator(e.data[2]).then((data) => {
-            lines = inputData;
+            lines = data;
+            for(var i=0; i<lines.length - 1; i++){
+                var temp = lines[i].split(",");
+                if(temp.length > 1){
+                    inputData.push(temp);
+                }
+            }
+
             console.log(inputData.length);
 
             // This is calculated synchronously, since single threaded
-            inputData.forEach((data, index) => {
-                if(summation(data)){
-                    outputData.push(index);
-                }
-            })
+            inputData.forEach((data) => outputData.push(summation(data)))
         
             // Finally output message on mainThread once calculations done
             postMessage(outputData);

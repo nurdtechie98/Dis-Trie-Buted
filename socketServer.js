@@ -38,7 +38,7 @@ const createNamespace = (io, resultDict, configJson, configDict) => {
             socket.emit('initialize',url);
             socket.on('ready', () => {
                 console.log(`Ready received -> ${socket.id} is calculating from ${curr}`);
-                socket.emit('range',start + (curr*step) + 1,step,readFile);
+                socket.emit('range',start + (curr*step),step,readFile);
                 resultDict[namespace].answers[i] = socket.id;
             });
             // Disconnect is a defualt event provided by socket
@@ -82,8 +82,6 @@ const createNamespace = (io, resultDict, configJson, configDict) => {
                 // Removing entries from dictionary since work done
                 if(start + (step*(curr+1)) >= end){
                     console.log(`Every segment of work done for ${namespace}`)
-                    delete resultDict[namespace]
-                    delete configDict[namespace]
                 }
 
                 // Finally emitting the getReward message which contains the contract id to collect reward from

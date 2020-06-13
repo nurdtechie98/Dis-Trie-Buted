@@ -6,9 +6,9 @@
     "workerURL": "worker.js",
     "reward": 2000,
     "start": 0,
-    "end": 506,
-    "step": 100,
+    "end": 31797,
+    "step": 6000,
     "maxTime": 5,
-    "readFile": "/static/HOUSE/housing.csv",
+    "readFile": "housing.csv",
     "writeFile": null
 }
