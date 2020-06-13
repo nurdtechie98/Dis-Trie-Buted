@@ -1,0 +1,14 @@
+{	
+    "id": "FIB",	
+    "name": "Fibonacci Calculations",	
+    "description": "Calculating fibonacci in bulk using matrix multiplication with fast exponentiation",	
+    "supplier": "supplierWalletAddress",	
+    "workerURL": "worker.js",	
+    "reward": 2000,	
+    "start": 1,	
+    "end": 400,	
+    "step": 100,	
+    "maxTime": 5,	
+    "readFile": null,	
+    "writeFile": null	
+}
