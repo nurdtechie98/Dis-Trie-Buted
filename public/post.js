@@ -16,15 +16,16 @@ form.addEventListener("submit", async (e) => {
     var formData = new FormData(form);
     const start = parseInt(formData.get("start"));
     const end = parseInt(formData.get("end"));
-    const step = parseInt(formData.get("step"));
+    const jobs = parseInt(formData.get("jobs"));
+    const step = `${Math.ceil((end - start) / jobs)}`;
 
     // Need to call the contract function here
     const seriesId = makeid(12);
     formData.append("seriesId",seriesId);
     const publicAddress = formData.get("supplier");
     const incentive = formData.get("reward");
-    const steps = `${Math.ceil((end - start) / step)}`;
-    const val = ''+(BigInt(steps)*BigInt(incentive));
+    formData.append("step",step)
+    const val = ''+(BigInt(jobs)*BigInt(incentive));
 
     console.log(seriesId,publicAddress,incentive,val);
 
