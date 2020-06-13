@@ -139,6 +139,7 @@ app.post("/addFile", upload.fields([{
   }]),(req,res) => {
     let config = new Object();
     console.log(req.body)
+    config['email'] = req.body.email;
     config['seriesId'] = req.body.seriesId;
     config['id'] = req.body.seriesId;
     config['name'] = req.body.name;
