@@ -66,11 +66,11 @@ const terminate = (id) => {
     // Setting the status of worker to 0
     stat[id] = 0
     
-    console.log("stat - ", stat)
+    console.log("[INFO] Thread status - ", stat)
     
     // checking status of each thread, if it is 0 for all, emit processingDone
     if(stat.reduce((total,cur) => total+cur) === 0){
-        console.log(`All threads have been terminated`)
+        console.log(`[INFO] All threads have been terminated`)
         // processingDone message sent to master node, with the data
         // Sending all flattened data to master node, to release off some workload
         // .flat() flattens to depth 1 only
@@ -104,7 +104,8 @@ socket.on('initialize', (url) => {
             // Can optimize further by only giving dataIndex
             // And generating data on master node
             
-            console.log(`calculation done from ${workerParams[i][0]} to ${workerParams[i][1]}`);
+            console.log(`[INFO] calculation done from ${workerParams[i][0]} to ${workerParams[i][1]}`);
+            console.log(`[DEBUG] ${i} Thread data is -> ${res.data}`);
             
             // Since each worker works exactly once
             // Once they finish their array of tasks, it's complete and can be terminated
@@ -118,7 +119,6 @@ socket.on('initialize', (url) => {
         stat.push(1);
     }
     
-    console.log('Team of myWorkers created as ->', team);
     // Sending ready message to master node, to receive range next
     socket.emit('ready');
 })
@@ -149,7 +149,7 @@ socket.on('range', (start, step, fileLoc) => {
     workerParams.push([start + ((cores-1)*workerStep), step - ((cores-1)*workerStep), fileLoc])
     
     for(let i=0; i<cores; i++){
-        console.log(`Thread ${i} is alloted ${workerParams[i][0]} to ${workerParams[i][0] + workerParams[i][1]}`)
+        console.log(`[DEBUG] Thread ${i} is alloted ${workerParams[i][0]} to ${workerParams[i][0] + workerParams[i][1]}`)
         resultRows[i][1].innerHTML = `${workerParams[i][0]} to ${workerParams[i][0] + workerParams[i][1]}`;
         resultRows[i][2].innerHTML = `Calculating...`;
         team[i].postMessage(workerParams[i])

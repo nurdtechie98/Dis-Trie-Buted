@@ -21,13 +21,13 @@ var upload = multer({dest:'tmp/'});
 
 process.env.PORT = process.env.PORT ? process.env.PORT : 8080;
 server = app.listen(process.env.PORT,()=>{
-    console.log(`listening at port ${process.env.PORT}`); 
+    console.log(`[INFO] listening at port ${process.env.PORT}`); 
 });
 
 // Setting up socket io
 const io = require('socket.io')(server);
 
-console.log("Initializing needed files....");
+console.log("[INFO] Initializing needed files....");
 
 // Getting current problems dynamically, as they are stored in public folder
 const getProblemsList = () => {
@@ -94,14 +94,12 @@ problemsList.forEach((problem) => {
     }
 })
 
-console.log("All files created, can start now...");
+console.log("[INFO] All files created, can start now...");
 
 // When root location hit, display all current problems available dynamically
 // All current problems fetched and data extracted from config.json
 // Render the main view with this dynamic data
 app.get("/", (_req,res) => {
-    console.log("hitting")
-    
     // calculate number of total steps and completed ones
     const resTotal = [];
     const resDone = [];
@@ -128,7 +126,6 @@ app.get("/favicon.ico", (_req,res) => res.status(204));
 app.get("/robots.txt", (_req,res) => res.status(204));
 
 app.get("/addFile", (req,res) => {
-    console.log("hitt");
     res.render("fileupload");
 })
 
@@ -138,7 +135,6 @@ app.post("/addFile", upload.fields([{
     name: 'dataFile', maxCount: 1
   }]),(req,res) => {
     let config = new Object();
-    console.log(req.body)
     config['email'] = req.body.email;
     config['seriesId'] = req.body.seriesId;
     config['id'] = req.body.seriesId;
@@ -152,33 +148,27 @@ app.post("/addFile", upload.fields([{
     config['workerURL'] =  req.files['workerFile'][0].originalname;
     config['readFile'] = req.files['dataFile'] ? req.files['dataFile'][0].originalname : null;
     fs.mkdirSync(__dirname+"/public/"+req.body.seriesId);
-    var response = "file to be uploaded"; 
-    console.log("=======",req.files.workerFile);
     
     fs.rename(__dirname+"/"+req.files.workerFile[0].path,__dirname+"/public/"+req.body.seriesId+"/worker.js",()=>{
-        console.log("moved data file");
+        console.log("[INFO] Renamed worker file");
     })
 
     // Check whether dataFile is present, only then create
     if("dataFile" in req.files){
         fs.rename(__dirname+"/"+req.files.dataFile[0].path,__dirname+"/public/"+req.body.seriesId+"/"+req.files.dataFile[0].originalname,()=>{
-            console.log("moved data file");
+            console.log("[INFO] Renamed data file");
             config['readFile'] = req.files.dataFile[0].originalname;
         })    
     }
     else{
         config['readFile'] = null;
     }
-
-    console.log(response);
     var configString = JSON.stringify(config);
     fs.writeFileSync(__dirname+"/public/"+req.body.seriesId+"/config.json",configString,(err)=>{
         if(err) {
-            console.log("write error");
+            console.log("[DEBUG] Write error", err);
         }
-        response = "config written"
     });
-    console.log(response);
 
 
     // Updating global structures and creating result.json
@@ -201,7 +191,6 @@ app.post("/addFile", upload.fields([{
 })
 
 app.get("/landing",(req,res)=>{
-    console.log("yesss")
     res.render("home")
 })
 

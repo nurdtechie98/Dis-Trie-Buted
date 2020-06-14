@@ -2,9 +2,7 @@ const form = document.querySelector('form');
 
 function test() {
     const problem_name = document.getElementById('problem_name');
-    console.log(problem_name.value.trim());
     if(!problem_name.value.trim()){
-        console.log("345678")
         problem_name.style.background = "rgba(255,0,0,0.6)";
         problem_name.placeholder = "Empty name not allowed";
         setTimeout(() => {
@@ -19,7 +17,6 @@ function test2() {
     const public_address = document.getElementById('public_address');
     const reward = document.getElementById('reward');
     if(!isAddress(public_address.value.trim())){
-        console.log("101010")
         public_address.style.background = "rgba(255,0,0,0.6)";
         public_address.value = "";
         public_address.placeholder = "Ethereum public address not valid";
@@ -29,9 +26,7 @@ function test2() {
         },8000)
         document.getElementById('prev3').click();
     }
-    console.log("bdkhf")
     if(!checkDecimal(reward.value)){
-        console.log("djhnkdf")
         reward.style.background = "rgba(255,0,0,0.6)";
         reward.value = "";
         reward.placeholder = "Only decimal entry allowed";
@@ -107,7 +102,6 @@ function test3() {
 function isInteger(characters) {
     var charactersLength = characters.length;
     var numbers = '0123456789';
-    console.log(characters);
     if(characters.charAt(0)=== '+' || characters.charAt(0)=== '-' || numbers.includes(characters.charAt(0))){
         
     }
@@ -169,13 +163,12 @@ form.addEventListener("submit", async (e) => {
     formData.append("reward",incentive);
     const val = ''+(BigInt(jobs)*BigInt(incentive));
 
-    console.log(seriesId,publicAddress,incentive,val);
 
     await deposit(seriesId,incentive,publicAddress,val);
 
     alert("Contract created!");
 
-    console.log(`Contract at ${seriesId} by ${publicAddress} for ${incentive} for each step, total steps are ${val}`);
+    console.log(`[INFO] Contract created at ${seriesId} by ${publicAddress} for ${incentive} for each step, total steps are ${val}`);
 
     await fetch("/addFile", {
         method: 'POST',
