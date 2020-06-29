@@ -1,6 +1,22 @@
-## Dis-Trie-Buted
-Volunteer Computing Marketplace 
+<p align="center">
+  <a href="" rel="noopener">
+ <img height=200px src="https://i.imgur.com/XmBqtv8.png" alt="Briefly-logo"></a>
+</p>
 
+<h1 align="center">Dis-Trie-Buted</h1>
+
+<div align="center">
+
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![forthebadge](https://img.shields.io/badge/uses-JS-yellow.svg?style=for-the-badge)](https://forthebadge.com)
+
+
+<h4>Volunteer Computing Marketplace</h4>
+
+</div>
+
+---------------------------
 ## Folder and File Structure
 
 ### Index.js
