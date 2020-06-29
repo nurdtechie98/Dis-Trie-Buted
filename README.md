@@ -28,24 +28,27 @@
 * Dis-Trie-Buted revolves around connecting these idle computing resource providers, to those in need, and even provide a layer of incentivization to benefit the provider, but not as expensive as cloud services, so that the solution is still viable.
 
 ---------------------------
-<p align="center">
-    <img alt="create task demo" src="https://i.imgur.com/3IxJN4h.gif">
-</p>
-<p align="center">
-    <img alt="run task demo" src="https://i.imgur.com/0BFKIpX.gif">
-</p>
 
 ### How does it work?
+<h4> Have A Computational Problem ?</h4>
+<p align="center">
+    <img  height=300px alt="create task demo" src="./Create task.gif">
+</p>
+<ul>
+  <li>Create New Task</li>
+  <li>Set the Incentive</li>
+  <li>Add Worker File</li>
+</ul>
 
-* Have A Computational Problem ?
-  * Create New Task
-  * Set the Incentive
-  * Add Worker File
-
-* Have Idle Computing Power ?
-  * Select The Task
-  * Leave The Task Running
-  * Claim Your Incentive
+<h4> Have Idle Computing Power ?</h4>
+<p align="center">
+    <img height=300px alt="run task demo" src="./run task.gif">
+</p>
+<ul>
+  <li>Select The Task</li>
+  <li>Leave The Task Running</li>
+  <li>Claim Your Incentive</li>
+</ul>
 
 ----------------------------
 
@@ -85,3 +88,12 @@
 3. `ready` - The slave node receives the algorithm from the url and creates worker threads from it and initializes other parameters, and sends a ready request to the master node
 4. `range` - Finally master node sends the range of data, or the data to work on to the slave node using the range message
 5. `processingDone` - When the whole range is calculated by the slave node, sends a message of `processingDone` to master node.
+
+------------
+
+### Created by
+
+* Neel Shah - [nilshah98](https://github.com/nilshah98)
+* Shivam Pawase - [shivam1708](https://github.com/shivam1708)
+* Chirag Shetty - [nurdtechie98](https://github.com/nurdtechie98)
+
