@@ -12,7 +12,7 @@
 [![forthebadge](https://img.shields.io/badge/uses-JS-yellow.svg?style=for-the-badge)](https://forthebadge.com)
 
 
-<h4>Volunteer Computing Marketplace</h4>
+<h3>Volunteer Computing Marketplace</h3>
 
 </div>
 
