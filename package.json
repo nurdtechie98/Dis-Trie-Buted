@@ -4,7 +4,9 @@
   "description": "volunteer computing made easy",
   "main": "index.js",
   "nodemonConfig": {
-    "ignore": ["public/*/results.json"]
+    "ignore": [
+      "public/*/results.json"
+    ]
   },
   "scripts": {
     "test": "mocha --reporter dot --exit",

@@ -29307,7 +29307,7 @@ window.onload = async () => {
         }
     ]; 
     
-    var address = '0x2a6fb74a957ccf52fa1ded96f40afe86ac8e6986';
+    var address = '0x4E1E55Da8505C4eB08fd3daC86A37dFa8a1978C1';
     await ethereum.enable();
     accounts = await web3.eth.getAccounts();
     console.log(accounts);
@@ -29346,7 +29346,7 @@ window.getIncentive = async (id) => {
         }
     )
     //return series_address;
-    console.log(incentive);
+    console.log("Incentive ",incentive);
 }
 
 

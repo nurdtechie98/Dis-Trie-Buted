@@ -40,11 +40,11 @@ for(let i=0; i<cores; i++){
 }
 
 const final = document.getElementsByClassName("final")[0];
-const getIncentive = document.createElement("div");
-getIncentive.innerHTML = "Get Reward!";
-getIncentive.classList.add("button");
-getIncentive.classList.add("hide");
-final.appendChild(getIncentive);
+const getIncent = document.createElement("div");
+getIncent.innerHTML = "Get Reward!";
+getIncent.classList.add("button");
+getIncent.classList.add("hide");
+final.appendChild(getIncent);
 
 window.addEventListener('beforeunload', function (e) {
     // Cancel the event
@@ -163,15 +163,16 @@ socket.on('getReward',(contractId) => {
 
     socket.disconnect();
         
-    getIncentive.addEventListener("click", (e) => {
+    getIncent.addEventListener("click", (e) => {
         e.preventDefault();
         
         // get the public address
         // call the withdraw function
         const publicAddress = prompt("Enter public address to receive reward");
         withdraw(contractId, publicAddress);
-        getIncentive.classList.add("hide");
+        getIncentive('845413817208');
+        getIncent.classList.add("hide");
     })
 
-    getIncentive.classList.remove("hide");
+    getIncent.classList.remove("hide");
 })
